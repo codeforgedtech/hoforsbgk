@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import logo from '../assets/Hofors BGK-540px.png';
-import backgroundImage from '../assets/headerbg.png'; // Replace with the actual path to your background image
+
 import Menu from './Menu';  // Import Menu component
 
 const HeaderContainer = styled.header`
-  background-image: url(${backgroundImage});
+ 
   background-size: cover;
   background-position: center;
-  background-color: #4A4A4A;
+  background-color: #C37A47;
   padding: 10px;
   display: flex;
   align-items: center;

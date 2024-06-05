@@ -9,6 +9,7 @@ import Rules from './components/Rules';
 import Tips from './components/Tips';
 import Public from './components/Public';
 import News from './components/News';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/news" element={<News />} />
           <Route path="/admin" element={<AdminLogin />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

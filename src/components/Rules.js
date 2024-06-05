@@ -15,7 +15,7 @@ const Title = styled.h2`
 
 const Content = () => (
   <ContentContainer>
-    <Title>Regeler</Title>
+    <Title>Regler</Title>
     <p>Page content goes here.</p>
   </ContentContainer>
 );

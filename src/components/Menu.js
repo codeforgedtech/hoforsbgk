@@ -1,6 +1,26 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import logo from '../assets/Hofors BGK-540px.png';
+
+// Animation for sliding the menu in and out
+const slideIn = keyframes`
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+`;
 
 const MenuContainer = styled.nav`
   padding: 10px;
@@ -8,7 +28,7 @@ const MenuContainer = styled.nav`
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  height:120px;
+  height: 120px;
 
   @media (max-width: 768px) {
     position: relative;
@@ -16,7 +36,19 @@ const MenuContainer = styled.nav`
     align-items: flex-start;
     width: 100%;
     padding: 0;
-    height:10px;
+    height: auto;
+  }
+`;
+
+const Logo = styled.img`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 15;
   }
 `;
 
@@ -24,23 +56,27 @@ const MenuItem = styled(Link)`
   color: white;
   text-decoration: none;
   margin: 5px;
-  padding: 10px 15px;
-  background-color: #E94E1B;
-  border-radius: 15px;
+  padding: 10px 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 60%;
+  align-items: top;
+  width: 100%;
+  font-size: 18px; 
+  font-weight: 600;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: #D4411B;
-    transform: scale(1.05);
+    transform: scale(1.1);
+    color: black;
+  
   }
 
   @media (max-width: 768px) {
-    width: 90%;
-    padding: 10px 3px; /* Smaller padding for mobile */
+    width: 100%;
+    padding: px 0;
     font-size: 20px; 
+    font-weight: 800;
+    color: black; /* Ändra textfärg till svart i mobil läge */
   }
 `;
 
@@ -49,11 +85,11 @@ const HamburgerButton = styled.button`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 40px;
-  background-color: #E94E1B;
+  height: 45px;
+  width: 45px;
+  background-color: #C37A47;
   border: none;
-  border-radius: 15px;
+  border-radius: 10px;
   cursor: pointer;
   position: fixed;
   top: 25px;
@@ -92,19 +128,20 @@ const MenuItems = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
-    width: 60%;
+    width: 50%;
     position: fixed;
-    top: 70px;
-    left: 65%;
-    transform: translateX(-50%);
-    background-color: rgba(74, 74, 74, 0.95);
-    height: auto;
-    justify-content: center;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background-color: white;
+    transform: translateX(100%);
+    animation: ${props => (props.open ? slideIn : slideOut)} 0.5s forwards;
+    justify-content: flex-start; /* Justera för att placera menyn högre upp */
     align-items: center;
-    border-radius: 15px;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
-    display: ${props => (props.open ? 'flex' : 'none')};
-    padding-top: 20px;
+    padding-top: 65px; /* Justera för att flytta upp menyn */
+    border-left: 2px solid black; /* Lägg till svart kant på vänster sida */
   }
 `;
 
@@ -126,18 +163,26 @@ const Menu = () => {
         <span></span>
         <span></span>
       </HamburgerButton>
+    
       <MenuItems open={isOpen}>
+      {isOpen && <Logo src={logo} alt="logo" width={50} height={50} />}
         <MenuItem to="/news" onClick={closeMenu}>Nyheter</MenuItem>
         <MenuItem to="/players" onClick={closeMenu}>Spelare</MenuItem>
         <MenuItem to="/courses" onClick={closeMenu}>Banor</MenuItem>
         <MenuItem to="/rules" onClick={closeMenu}>Regler</MenuItem>
         <MenuItem to="/tips" onClick={closeMenu}>Tips</MenuItem>
         <MenuItem to="/public" onClick={closeMenu}>Allmänheten</MenuItem>
-        <MenuItem to="/admin" onClick={closeMenu}>Admin Login</MenuItem>
+        <MenuItem to="/admin" onClick={closeMenu}>Admin</MenuItem>
       </MenuItems>
     </MenuContainer>
   );
 };
 
 export default Menu;
+
+
+
+
+
+
 
