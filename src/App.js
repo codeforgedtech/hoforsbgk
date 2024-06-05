@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import Menu from './components/Menu';
+
 import AdminLogin from './components/AdminLogin';
 import Players from './components/Players';
 import Courses from './components/Courses';
@@ -15,7 +15,7 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        <Menu />
+       
         <Routes>
         <Route path="/" element={<News />} />
           <Route path="/players" element={<Players />} />
