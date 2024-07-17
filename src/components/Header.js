@@ -42,6 +42,7 @@ const Title = styled.h1`
   @media (min-width: 769px) {
     font-size: 55px; /* Större titel i desktop-läge */
   }
+    
 `;
 
 const Header = () => (

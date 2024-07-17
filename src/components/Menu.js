@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase';
 import logo from '../assets/Hofors BGK-540px.png';
+import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 
 // Animation for sliding the menu in and out
 const slideIn = keyframes`
@@ -49,6 +52,8 @@ const Logo = styled.img`
     top: 20px;
     left: 20px;
     z-index: 15;
+    width:100px;
+    height:100px;
   }
 `;
 
@@ -61,22 +66,28 @@ const MenuItem = styled(Link)`
   justify-content: center;
   align-items: top;
   width: 100%;
-  font-size: 18px; 
+  font-size: 16px; 
   font-weight: 600;
   transition: all 0.3s ease;
 
   &:hover {
     transform: scale(1.1);
     color: black;
-  
   }
 
   @media (max-width: 768px) {
     width: 100%;
-    padding: px 0;
+    padding: 10px 0;
     font-size: 20px; 
     font-weight: 800;
     color: black; /* Ändra textfärg till svart i mobil läge */
+  }
+`;
+
+const Spacer = styled.div`
+  
+   @media (max-width: 768px) {
+    height: 30px;
   }
 `;
 
@@ -110,7 +121,7 @@ const HamburgerButton = styled.button`
   }
 
   &.open span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: rotate(55deg) translate(10px, 5px);
   }
 
   &.open span:nth-child(2) {
@@ -118,17 +129,44 @@ const HamburgerButton = styled.button`
   }
 
   &.open span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
+    transform: rotate(-55deg) translate(10px, -5px);
   }
 `;
+const LogoutButton = styled(Link)`
+   color: white;
+  text-decoration: none;
+  margin: 5px;
+  padding: 10px 20px;
+  display: flex;
 
+  justify-content: center;
+  align-items: top;
+  width: 100%;
+  font-size: 16px; 
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    color: black;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 20px; 
+    font-weight: 800;
+    color: black; /* Ändra textfärg till svart i mobil läge */
+  }
+
+`;
 const MenuItems = styled.div`
   display: flex;
   flex-direction: row;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    width: 50%;
+    width: 100%;
     position: fixed;
     top: 0;
     right: 0;
@@ -147,6 +185,7 @@ const MenuItems = styled.div`
 
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user] = useAuthState(auth);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -156,6 +195,11 @@ const Menu = () => {
     setIsOpen(false);
   };
 
+  const handleLogout = () => {
+    auth.signOut();
+    closeMenu();
+  };
+
   return (
     <MenuContainer>
       <HamburgerButton className={isOpen ? 'open' : ''} onClick={toggleMenu}>
@@ -163,22 +207,31 @@ const Menu = () => {
         <span></span>
         <span></span>
       </HamburgerButton>
-    
+
       <MenuItems open={isOpen}>
-      {isOpen && <Logo src={logo} alt="logo" width={50} height={50} />}
+        {isOpen && <Logo src={logo} alt="logo" width={50} height={50} />}
         <MenuItem to="/news" onClick={closeMenu}>Nyheter</MenuItem>
-        <MenuItem to="/players" onClick={closeMenu}>Spelare</MenuItem>
-        <MenuItem to="/courses" onClick={closeMenu}>Banor</MenuItem>
+        <MenuItem to="/competitions" onClick={closeMenu}>Tävlingar</MenuItem>
+        <MenuItem to="/gallery/:folder" onClick={closeMenu}>Galleri</MenuItem>
+        <MenuItem to="/courses" onClick={closeMenu}>Banor/Tips</MenuItem>
         <MenuItem to="/rules" onClick={closeMenu}>Regler</MenuItem>
-        <MenuItem to="/tips" onClick={closeMenu}>Tips</MenuItem>
-        <MenuItem to="/public" onClick={closeMenu}>Allmänheten</MenuItem>
-        <MenuItem to="/admin" onClick={closeMenu}>Admin</MenuItem>
+        <MenuItem to="/association" onClick={closeMenu}>Föreningen</MenuItem>
+       
+        <MenuItem to="/public" onClick={closeMenu}>Öppettider</MenuItem>
+       
+        <Spacer />
+        {user ? (
+          <><MenuItem to="/panel" onClick={closeMenu}>Adminpanel</MenuItem><LogoutButton onClick={handleLogout}><FaSignOutAlt size={24}/></LogoutButton></>
+        ) : (
+          <MenuItem to="/admin" onClick={closeMenu}><FaSignInAlt size={24}/></MenuItem>
+        )}
       </MenuItems>
     </MenuContainer>
   );
 };
 
 export default Menu;
+
 
 
 
