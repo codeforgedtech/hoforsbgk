@@ -98,7 +98,7 @@ const Sponsors = () => (
   <FullNewsContainer>
     <Title>Sponsorer</Title>
     <NewsList>
-      {[...Array(30)].map((_, index) => (
+      {[...Array(32)].map((_, index) => (
         <NewsItem key={index}>
           <NewsImage 
             src={`${process.env.PUBLIC_URL}/assets/sponsorer/sponsor${index + 1}.jpg`} 
