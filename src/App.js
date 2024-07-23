@@ -12,9 +12,9 @@ import FullNews from './components/FullNews';
 
 import Public from './components/Public';
 import News from './components/News';
-import Members from './components/Members';
+import Members from './components/Sponsorer';
 import Gallery from './components/Galleri';
-
+import Sponsorer from './components/Sponsorer';
 import CreateNews from './components/CreateNews';
 import PrivateRoute from './components/PrivateRoute';
 import AdminPanel from './components/AdminPanel';
@@ -44,9 +44,10 @@ const App = () => {
             <Route path="/courses" element={<Courses />} />
             <Route path="/rules" element={<Rules />} />
            
-            <Route path="/members" element={<Members />} />
+           
             <Route path="/public" element={<Public />} />
             <Route path="/gallery/:folder" element={<Gallery />} />
+            <Route path="/sponsorer" element={<Sponsorer />} />
            
             <Route path="/news" element={<News />} />
             <Route path="/admin" element={<AdminLogin />} />

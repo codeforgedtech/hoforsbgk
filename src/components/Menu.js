@@ -216,7 +216,7 @@ const Menu = () => {
         <MenuItem to="/courses" onClick={closeMenu}>Banor/Tips</MenuItem>
         <MenuItem to="/rules" onClick={closeMenu}>Regler</MenuItem>
         <MenuItem to="/association" onClick={closeMenu}>Föreningen</MenuItem>
-       
+        <MenuItem to="/sponsorer" onClick={closeMenu}>Sponsorer</MenuItem>
         <MenuItem to="/public" onClick={closeMenu}>Öppettider</MenuItem>
        
         <Spacer />
