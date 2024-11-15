@@ -21,7 +21,7 @@ const Title = styled.h1`
 
 const Paragraph = styled.p`
   color: #555555;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.6;
   margin-bottom: 15px;
   text-align: center;
@@ -29,7 +29,7 @@ const Paragraph = styled.p`
 
 const PriceList = styled.div`
   color: #555555;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.6;
   margin-bottom: 0;
 
@@ -41,7 +41,7 @@ const PriceList = styled.div`
 
 const OpeningHours = styled.div`
   margin: 20px 0;
-  font-size: 16px;
+  font-size: 18px;
 
   & > p {
     margin: 10px 0;

@@ -152,10 +152,17 @@ const DeleteIcon = styled(FaTrash)`
   }
 `;
 
+const LinkContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+`;
+
 const CreateCompetition = () => {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
-  const [link, setLink] = useState('');
+  const [links, setLinks] = useState(['']); // Array for multiple links
   const [customType, setCustomType] = useState('');
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState('');
@@ -171,6 +178,7 @@ const CreateCompetition = () => {
       const competitionData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
+        links: doc.data().links || [] // Se till att links är en array
       }));
       setCompetitions(competitionData);
     };
@@ -178,20 +186,12 @@ const CreateCompetition = () => {
     fetchCompetitions();
   }, []);
 
-  useEffect(() => {
-    const storedCustomType = localStorage.getItem('customType');
-    if (storedCustomType) {
-      setCustomType(storedCustomType);
-    }
-  }, []);
-
-  const DEFAULT_IMAGE_URL = 'https://firebasestorage.googleapis.com/v0/b/hoforsbgk.appspot.com/o/competitions%2Fblank.png?alt=media&token=651c0dd1-de67-48b2-85d9-c390448aac97';
-
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
     }
   };
+  const DEFAULT_IMAGE_URL = 'https://firebasestorage.googleapis.com/v0/b/hoforsbgk.appspot.com/o/competitions%2Fblank.png?alt=media&token=651c0dd1-de67-48b2-85d9-c390448aac97';
 
   const handleUpload = () => {
     if (!image) return;
@@ -227,7 +227,7 @@ const CreateCompetition = () => {
     const competitionData = {
       name,
       type: type === 'other' ? customType : type,
-      link,
+      links,
       image: imageURL || DEFAULT_IMAGE_URL,
       createdAt: Timestamp.now(),
     };
@@ -235,7 +235,7 @@ const CreateCompetition = () => {
     await addDoc(competitionCollection, competitionData);
     setName('');
     setType('');
-    setLink('');
+    setLinks(['']); // Reset links
     setCustomType('');
     setImageURL('');
     setCompetitions([...competitions, competitionData]);
@@ -264,6 +264,21 @@ const CreateCompetition = () => {
     localStorage.setItem('customType', value);
   };
 
+  const handleLinkChange = (index, value) => {
+    const updatedLinks = [...links];
+    updatedLinks[index] = value;
+    setLinks(updatedLinks);
+  };
+
+  const addLinkField = () => {
+    setLinks([...links, '']);
+  };
+
+  const removeLinkField = (index) => {
+    const updatedLinks = links.filter((_, i) => i !== index);
+    setLinks(updatedLinks);
+  };
+
   return (
     <Container>
       <Box>
@@ -281,15 +296,30 @@ const CreateCompetition = () => {
           <option value="Liga">Liga</option>
           <option value="Veckotävling">Veckotävling</option>
           <option value="Lokal tävling">Lokal tävling</option>
-        
+          <option value="Annat">Annat</option>
         </Select>
- 
-        <Input
-          type="text"
-          placeholder="Tävlingslänk"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-        />
+        {type === 'Annat' && (
+          <Input
+            type="text"
+            placeholder="Ange annan tävlingstyp"
+            value={customType}
+            onChange={handleCustomTypeChange}
+          />
+        )}
+        {links.map((link, index) => (
+          <LinkContainer key={index}>
+            <Input
+              type="text"
+              placeholder={`Tävlingslänk ${index + 1}`}
+              value={link}
+              onChange={(e) => handleLinkChange(index, e.target.value)}
+            />
+            {links.length > 1 && (
+              <Button onClick={() => removeLinkField(index)}>Ta bort länk</Button>
+            )}
+          </LinkContainer>
+        ))}
+        <Button onClick={addLinkField}>Lägg till länk</Button>
         <Input type="file" onChange={handleFileChange} />
         <Button onClick={handleUpload}>Ladda upp bild</Button>
 
@@ -309,6 +339,11 @@ const CreateCompetition = () => {
           {competitions.map((competition) => (
             <CompetitionItem key={competition.id}>
               <CompetitionName>{competition.name}</CompetitionName>
+              <div>
+                {(competition.links || []).map((link, index) => (
+                  <a key={index} href={link} target="_blank" rel="noopener noreferrer">Link {index + 1}</a>
+                ))}
+              </div>
               <DeleteIcon onClick={() => handleDeleteCompetition(competition.id)} />
             </CompetitionItem>
           ))}
@@ -319,6 +354,8 @@ const CreateCompetition = () => {
 };
 
 export default CreateCompetition;
+
+
 
 
 

@@ -6,25 +6,24 @@ import { firestore } from '../firebase';
 import SEO from './SEO';
 
 const FullNewsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
   padding: 20px;
   margin: 20px;
-  background-color: #FFF;
+  min-height: 60vh;
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 98%; /* Make sure container spans the full width */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
 `;
 
 const FullNewsBox = styled.div`
   background-color: #ffffff;
   padding: 40px;
   border-radius: 10px;
-  width: 100%;
-  max-width: 600px;
+  width: 98%;
+  max-width: 2500px; /* Adjust as needed */
   text-align: left;
+  box-sizing: border-box; /* Include padding in width calculation */
 `;
 
 const Title = styled.h2`
@@ -33,22 +32,40 @@ const Title = styled.h2`
   font-size: 24px;
 `;
 
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column; /* Default direction for mobile */
+  gap: 20px;
+  
+  @media (min-width: 768px) {
+    flex-direction: row; /* Side by side on desktop */
+    align-items: flex-start;
+  }
+`;
+
 const Content = styled.div`
   color: #666666;
-  font-size: 16px;
+  font-size: 18px;
+  flex: 1; /* Take up remaining space */
 `;
 
 const Image = styled.img`
-  max-width: 100%;
+  width: 100%; /* Default to full width on mobile */
   height: auto;
-  margin: 10px 0;
   border-radius: 10px;
+  object-fit: cover; /* Ensure the image covers the space nicely */
+
+  @media (min-width: 768px) {
+    width: 50%; /* 50% width on desktop */
+    margin-right: 20px; /* Space between image and text on desktop */
+  }
 `;
 
 const BackButton = styled.button`
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
+  margin-right: 10px;
   background-color: #E94E1B;
   color: white;
   border: none;
@@ -106,20 +123,24 @@ const FullNews = () => {
       <SEO title={newsItem.title} description="Senaste nyheterna från vår klubb" keywords="nyheter, klubb, senaste nyheter" />
       <FullNewsBox>
         <Title>{newsItem.title}</Title>
-        {newsItem.image1 && <Image src={newsItem.image1} alt="news" />}
-        <Content dangerouslySetInnerHTML={{ __html: newsItem.content }} />
+        <ContentContainer>
+          {newsItem.image1 && <Image src={newsItem.image1} alt="news" />}
+          <Content dangerouslySetInnerHTML={{ __html: newsItem.content }} />
+        </ContentContainer>
+       
+        <BackButton onClick={handleBack}>Tillbaka</BackButton>
         {newsItem.image2 && <Image src={newsItem.image2} alt="news" />}
         {newsItem.competitionLink && (
           <StyledLink href={newsItem.competitionLink} target="_blank" rel="noopener noreferrer">
             Resultat
           </StyledLink>
         )}
-        <BackButton onClick={handleBack}>Tillbaka</BackButton>
       </FullNewsBox>
     </FullNewsContainer>
   );
 };
 
 export default FullNews;
+
 
 

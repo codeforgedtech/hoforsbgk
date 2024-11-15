@@ -42,7 +42,7 @@ const RuleWraper = styled.div`
 `;
 
 const Rule = styled.p`
-  font-size: 16px;
+  font-size: 18px;
   color: #666666;
   margin-bottom: 20px;
   text-align: justify;

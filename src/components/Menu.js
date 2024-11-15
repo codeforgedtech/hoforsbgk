@@ -66,7 +66,7 @@ const MenuItem = styled(Link)`
   justify-content: center;
   align-items: top;
   width: 100%;
-  font-size: 16px; 
+  font-size: 20px; 
   font-weight: 600;
   transition: all 0.3s ease;
 

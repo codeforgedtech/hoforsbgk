@@ -62,11 +62,17 @@ const CourtContainer = styled.div`
 `;
 
 const Title = styled.h1`
+  grid-column: 1 / -1; /* Gör att titeln sträcker sig över hela gridens bredd */
   margin-top: 40px;
   margin-bottom: 20px;
   font-size: 2em;
   color: #C37A47;
-  text-align: center;
+  text-align: center; /* Centrera texten horisontellt */
+  
+  @media (max-width: 768px) {
+    margin-top: 20px;
+    font-size: 1.5em;
+  }
 `;
 
 const CourtImage = styled.img`
@@ -147,9 +153,10 @@ const Court = () => {
 
   return (
     <>
-     <SEO title="Banor" description="Upptäck våra olika bangolfbanor." keywords="banor, bangolf, hofors" />
-      <Title>Banor</Title>
+     
       <CourtContainer>
+      <SEO title="Banor" description="Upptäck våra olika bangolfbanor." keywords="banor, bangolf, hofors" />
+      <Title>Banor</Title>
         {courtsData.map((court, index) => (
           <div key={index}>
             <h2>{court.nr} - {court.name}</h2>

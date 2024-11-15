@@ -36,13 +36,16 @@ const Logo = styled.img`
 const Title = styled.h1`
   color: white;
   margin-left: 20px;
-  font-size: 30px;
-  text-shadow: 4px 4px 4px rgba(0, 0.5, 0.5, 0.5); /* Skugga med 2px förskjutning i x- och y-riktning och en blurrad radie på 4px */
+  text-shadow: 4px 4px 4px rgba(0, 0.5, 0.5, 0.5);
+  font-size: 6vw; /* Dynamiskt anpassar storleken efter skärmens bredd */
 
   @media (min-width: 769px) {
-    font-size: 55px; /* Större titel i desktop-läge */
+    font-size: 3vw; /* Använd en mindre, men fortfarande dynamisk, storlek för desktop */
   }
-    
+
+  @media (min-width: 1200px) {
+    font-size: 55px; /* På riktigt stora skärmar kan du sätta ett fast värde */
+  }
 `;
 
 const Header = () => (

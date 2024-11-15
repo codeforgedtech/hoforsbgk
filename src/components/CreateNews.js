@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { firestore, storage } from '../firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import Resizer from 'react-image-file-resizer';
@@ -40,6 +40,7 @@ const Title = styled.h2`
 const Input = styled.input`
   width: calc(100% - 20px);
   margin: 10px;
+  
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -72,7 +73,9 @@ const NewsListContainer = styled.div`
   width: 100%;
   max-width: 600px;
 `;
-
+const Space = styled.p`
+  margin-bottom:40px;
+`;
 const NewsItem = styled.div`
   display: flex;
   justify-content: space-between;
@@ -99,6 +102,16 @@ const DeleteIcon = styled(FaTrash)`
   }
 `;
 
+const EditIcon = styled(FaEdit)`
+  cursor: pointer;
+  color: #007bff;
+  margin-left: 10px;
+
+  &:hover {
+    color: #0056b3;
+  }
+`;
+
 const CreateNews = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -106,6 +119,7 @@ const CreateNews = () => {
   const [image2, setImage2] = useState(null);
   const [competitionLink, setCompetitionLink] = useState('');
   const [news, setNews] = useState([]);
+  const [editingId, setEditingId] = useState(null); // Keep track of the news item being edited
 
   useEffect(() => {
     fetchNews();
@@ -153,15 +167,30 @@ const CreateNews = () => {
     const image1URL = image1 ? await uploadImage(image1) : null;
     const image2URL = image2 ? await uploadImage(image2) : null;
   
-    await addDoc(newsCollection, {
-      title,
-      content,
-      image1: image1URL,
-      image2: image2URL,
-      competitionLink,
-      createdAt: new Date()
-    });
-  
+    if (editingId) {
+      // Update existing news
+      const newsDoc = doc(firestore, 'news', editingId);
+      await updateDoc(newsDoc, {
+        title,
+        content,
+        image1: image1URL || image1,
+        image2: image2URL || image2,
+        competitionLink,
+        updatedAt: new Date()
+      });
+      setEditingId(null); // Reset editing state
+    } else {
+      // Create new news
+      await addDoc(newsCollection, {
+        title,
+        content,
+        image1: image1URL,
+        image2: image2URL,
+        competitionLink,
+        createdAt: new Date()
+      });
+    }
+
     // Clear the form after submission
     setTitle('');
     setContent('');
@@ -176,23 +205,33 @@ const CreateNews = () => {
     fetchNews();
   };
 
+  const handleEditNews = (item) => {
+    setEditingId(item.id);
+    setTitle(item.title);
+    setContent(item.content);
+    setCompetitionLink(item.competitionLink || '');
+    setImage1(item.image1 || null);
+    setImage2(item.image2 || null);
+  };
+
   return (
     <CreateNewsContainer>
       <CreateNewsBox>
-        <Title>Skapa nyhet</Title>
+        <Title>{editingId ? 'Redigera Nyhet' : 'Skapa Nyhet'}</Title>
         <Input 
           type="text" 
           placeholder="Titel" 
           value={title} 
           onChange={(e) => setTitle(e.target.value)} 
         />
+        <Space>
         <ReactQuill 
           value={content} 
           onChange={(value) => setContent(value)} 
           placeholder="Innehåll" 
           style={{ margin: '10px', height: '180px' }} 
         />
-        <h2>....</h2>
+      </Space>
         <Input 
           type="file" 
           onChange={(e) => setImage1(e.target.files[0])} 
@@ -207,7 +246,9 @@ const CreateNews = () => {
           value={competitionLink} 
           onChange={(e) => setCompetitionLink(e.target.value)} 
         />
-        <Button onClick={handleCreateNews}>Skapa en nyhet</Button>
+        <Button onClick={handleCreateNews}>
+          {editingId ? 'Uppdatera Nyhet' : 'Skapa Nyhet'}
+        </Button>
       </CreateNewsBox>
       
       <NewsListContainer>
@@ -215,7 +256,10 @@ const CreateNews = () => {
         {news.map((item) => (
           <NewsItem key={item.id}>
             <NewsTitle>{item.title}</NewsTitle>
-            <DeleteIcon onClick={() => handleDeleteNews(item.id)} />
+            <div>
+              <EditIcon onClick={() => handleEditNews(item)} />
+              <DeleteIcon onClick={() => handleDeleteNews(item.id)} />
+            </div>
           </NewsItem>
         ))}
       </NewsListContainer>
@@ -224,3 +268,4 @@ const CreateNews = () => {
 };
 
 export default CreateNews;
+

@@ -148,15 +148,18 @@ const Competitions = () => {
                 <CompetitionImage src={item.image || DEFAULT_IMAGE_URL} alt={item.name} />
                 <OverlayContainer>
                   <NameOverlay>{item.name}</NameOverlay>
-                  {item.link && (
-                    <CompetitionLink href={item.link} target="_blank" rel="noopener noreferrer">
-                      Resultat
-                    </CompetitionLink>
+                  {item.links && item.links.length > 0 && (
+                    <CompetitionDetails>
+                      {item.links.map((link, index) => (
+                        <CompetitionLink key={index} href={link} target="_blank" rel="noopener noreferrer">
+                          Resultat {index + 1}
+                        </CompetitionLink>
+                      ))}
+                    </CompetitionDetails>
                   )}
                 </OverlayContainer>
                 <CompetitionType>{item.type}</CompetitionType>
               </ImageContainer>
-              
             </CompetitionItem>
           ))}
         </CompetitionsGrid>
@@ -166,6 +169,7 @@ const Competitions = () => {
 };
 
 export default Competitions;
+
 
 
 
