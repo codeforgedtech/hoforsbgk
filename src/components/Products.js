@@ -100,7 +100,7 @@ const Products = () => (
       {[
         { id: 1, name: 'Keps', price: 199, image: '/products/product1.jpg' },
         { id: 2, name: 'Tvättduk', price: 100, image: '/products/product2.jpg' },
-        { id: 3, name: 'Mugg', price: 75, image: '/products/product3.jpg' },
+        { id: 3, name: 'Mugg', price: 175, image: '/products/product3.jpg' },
       ].map((product) => (
         <ProductItem key={product.id}>
           <ProductImage 
