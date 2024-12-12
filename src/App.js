@@ -12,7 +12,7 @@ import FullNews from './components/FullNews';
 
 import Public from './components/Public';
 import News from './components/News';
-import Members from './components/Sponsorer';
+import Products from './components/Products';
 import Gallery from './components/Galleri';
 import Sponsorer from './components/Sponsorer';
 import CreateNews from './components/CreateNews';
@@ -43,7 +43,7 @@ const App = () => {
             <Route path="/association" element={<Association />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/rules" element={<Rules />} />
-           
+            <Route path="/butik" element={<Products />} />
            
             <Route path="/public" element={<Public />} />
             <Route path="/gallery/:folder" element={<Gallery />} />

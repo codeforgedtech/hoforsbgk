@@ -213,6 +213,7 @@ const Menu = () => {
         <MenuItem to="/news" onClick={closeMenu}>Nyheter</MenuItem>
         <MenuItem to="/competitions" onClick={closeMenu}>Tävlingar</MenuItem>
         <MenuItem to="/gallery/:folder" onClick={closeMenu}>Galleri</MenuItem>
+        <MenuItem to="/butik" onClick={closeMenu}>Butik</MenuItem>
         <MenuItem to="/courses" onClick={closeMenu}>Banor/Tips</MenuItem>
         <MenuItem to="/rules" onClick={closeMenu}>Regler</MenuItem>
         <MenuItem to="/association" onClick={closeMenu}>Föreningen</MenuItem>
