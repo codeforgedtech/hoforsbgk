@@ -1,63 +1,114 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { firestore } from '../firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { FaFolder } from 'react-icons/fa';
-import SEO from './SEO';
-import MediaItem from './MediaItem'; // Importera MediaItem
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { firestore } from "../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { FaImage, FaVideo, FaTimes } from "react-icons/fa";
+import { IoIosImages } from "react-icons/io";
+import SEO from "./SEO";
 
 const GalleryContainer = styled.div`
   padding: 20px;
   margin: 20px;
   min-height: 60vh;
-  background-color: #fff;
+  background-color: #f9f9f9;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 `;
 
 const FolderContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 20px;
 `;
 
 const FolderItem = styled.div`
-  margin: 20px;
   text-align: center;
   cursor: pointer;
-`;
-
-const FolderIcon = styled(FaFolder)`
-  font-size: 64px; /* Större storlek */
-  color: #C37A47;
-  transition: transform 0.2s, color 0.2s; /* Lägg till en övergång för att smidigt ändra storlek och färg */
-
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  width: 150px
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+background-color:#C37A47;
+border-radius: 10px;
   &:hover {
-    transform: scale(1.1); /* Förstora ikonen något vid hovring */
-    color: #E94E1B; /* Ändra färg vid hovring */
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
 `;
 
+const FolderIcon = styled(IoIosImages)`
+  font-size: 100px;
+  color: black;
+  background-color:white;
+border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+`;
+
 const FolderName = styled.div`
-  margin-top: 10px;
-  color: #333;
-  font-size: 1.2em; /* Större textstorlek */
+  margin-top: -40px;
+  color: white;
+  font-size: 1.2em;
+  margin-left: 5px;
+
 `;
 
 const MediaContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const MediaCard = styled.div`
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+`;
+
+const MediaIconOverlay = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 50%;
+  padding: 10px;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
 `;
 
 const BackButton = styled.button`
-  margin: 10px;
+  margin: 10px 0;
   padding: 10px 20px;
-  background-color: #C37A47;
+  background-color: #c37a47;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #e94e1b;
+  }
 `;
 
 const ModalBackdrop = styled.div`
@@ -66,14 +117,15 @@ const ModalBackdrop = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 `;
 
 const ModalContent = styled.div`
+  position: relative;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -82,79 +134,36 @@ const ModalContent = styled.div`
   max-width: 800px;
   max-height: 90%;
   overflow: hidden;
-  position: relative;
-  text-align: center;
 
   img {
-    max-width: 100%; /* Bilden kommer inte att överskrida sin containerens bredd */
-    height: auto; /* Säkerställer att höjden justeras proportionellt */
-    display: block; /* Tar bort extra utrymme som inline-element kan orsaka */
-    margin: 0 auto; /* Centrera bilden horisontellt */
+    width: 100%;
+    height: auto;
   }
 
-  @media (max-width: 768px) {
-    width: calc(100% - 20px); /* Anpassa bredden för mobila enheter */
-    max-width: calc(100% - 20px); /* Maximal bredd som inte överskrider skärmens bredd */
-    height: auto; /* Automatisk höjd baserat på innehållet */
-    padding: 10px;
+  iframe {
+    width: 100%;
+    height: 400px;
   }
 `;
 
-const ModalCloseButton = styled.button`
+const ModalCloseButton = styled(FaTimes)`
   position: absolute;
   top: 10px;
   right: 10px;
-  background: white;
-  border-radius: 5px;
-  border: none;
   font-size: 24px;
-  color: #000;
   cursor: pointer;
 `;
-
-const YouTubePlayer = styled.iframe`
-  width: 100%;
-  height: 200px;
-  display: block;
-  border: none;
-`;
-
-const Modal = ({ isOpen, onClose, media }) => {
-  if (!isOpen) return null;
-
-  const closeModal = (e) => {
-    e.stopPropagation();
-    onClose();
-  };
-
-  return (
-    <ModalBackdrop onClick={closeModal}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
-        {media.type === 'image' && <img src={media.url} alt={`Modal ${media.type}`} style={{ maxWidth: '100%', maxHeight: '100%' }} />}
-        {media.type === 'video' && (
-          <YouTubePlayer
-            src={media.embedUrl}
-            title={`YouTube Video Modal`}
-            allowFullScreen
-          />
-        )}
-        <ModalCloseButton onClick={closeModal}>×</ModalCloseButton>
-      </ModalContent>
-    </ModalBackdrop>
-  );
-};
 
 const Gallery = () => {
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [mediaItems, setMediaItems] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedMediaIndex, setSelectedMediaIndex] = useState(null);
+  const [modalMedia, setModalMedia] = useState(null);
 
   useEffect(() => {
     const fetchFolders = async () => {
-      const querySnapshot = await getDocs(collection(firestore, 'gallery'));
-      const folderNames = querySnapshot.docs.map(doc => doc.data().folder);
+      const querySnapshot = await getDocs(collection(firestore, "gallery"));
+      const folderNames = querySnapshot.docs.map((doc) => doc.data().folder);
       const uniqueFolders = [...new Set(folderNames)];
       setFolders(uniqueFolders);
     };
@@ -166,9 +175,12 @@ const Gallery = () => {
     const fetchMediaItems = async () => {
       if (!selectedFolder) return;
 
-      const q = query(collection(firestore, 'gallery'), where('folder', '==', selectedFolder));
+      const q = query(
+        collection(firestore, "gallery"),
+        where("folder", "==", selectedFolder)
+      );
       const querySnapshot = await getDocs(q);
-      const mediaData = querySnapshot.docs.map(doc => doc.data());
+      const mediaData = querySnapshot.docs.map((doc) => doc.data());
       setMediaItems(mediaData);
     };
 
@@ -184,19 +196,21 @@ const Gallery = () => {
     setMediaItems([]);
   };
 
-  const openModal = (index) => {
-    setSelectedMediaIndex(index);
-    setModalOpen(true);
+  const openModal = (media) => {
+    setModalMedia(media);
   };
 
   const closeModal = () => {
-    setModalOpen(false);
-    setSelectedMediaIndex(null);
+    setModalMedia(null);
   };
 
   return (
     <GalleryContainer>
-      <SEO title="Galleri" description="Se bilder från våra evenemang och aktiviteter." keywords="galleri, bilder, evenemang, video" />
+      <SEO
+        title="Galleri"
+        description="Se bilder från våra evenemang och aktiviteter."
+        keywords="galleri, bilder, evenemang, video"
+      />
       {!selectedFolder && (
         <FolderContainer>
           {folders.map((folderName, index) => (
@@ -213,23 +227,50 @@ const Gallery = () => {
           <BackButton onClick={handleBackButtonClick}>Tillbaka</BackButton>
           <MediaContainer>
             {mediaItems.map((media, index) => (
-              <MediaItem
-                key={index}
-                media={media}
-                index={index}
-                onMediaClick={openModal}
-              />
+              <MediaCard key={index} onClick={() => openModal(media)}>
+                {media.type === "image" && (
+                  <img src={media.url} alt={`Bild ${index}`} />
+                )}
+                {media.type === "video" && (
+                  <img
+                    src={`https://img.youtube.com/vi/${media.videoId}/hqdefault.jpg`}
+                    alt={`Video ${index}`}
+                  />
+                )}
+                <MediaIconOverlay>
+                  {media.type === "image" ? <FaImage /> : <FaVideo />}
+                </MediaIconOverlay>
+              </MediaCard>
             ))}
           </MediaContainer>
         </>
       )}
 
-      <Modal isOpen={modalOpen} onClose={closeModal} media={mediaItems[selectedMediaIndex]} />
+      {modalMedia && (
+        <ModalBackdrop onClick={closeModal}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            {modalMedia.type === "image" && (
+              <img src={modalMedia.url} alt="Modal" />
+            )}
+            {modalMedia.type === "video" && (
+              <iframe
+                src={`https://www.youtube.com/embed/${modalMedia.videoId}`}
+                title="Video Modal"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            )}
+            <ModalCloseButton onClick={closeModal} />
+          </ModalContent>
+        </ModalBackdrop>
+      )}
     </GalleryContainer>
   );
 };
 
 export default Gallery;
+
+
 
 
 

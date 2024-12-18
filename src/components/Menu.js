@@ -6,6 +6,15 @@ import { auth } from '../firebase';
 import logo from '../assets/Hofors BGK-540px.png';
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 
+// Define colors based on the logo
+const colors = {
+  primary: '#C37A47', // Brun nyans från loggan
+  secondary: '#BBD4E1', // Ljusblå ton
+  accent: '#ffffff',   // Vit för kontrast
+  textDark: '#333333', // Mörk text
+  bmeny:"#C37A47",
+};
+
 // Animation for sliding the menu in and out
 const slideIn = keyframes`
   from {
@@ -30,64 +39,64 @@ const MenuContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   height: 120px;
+  
+  color: ${colors.accent};
 
   @media (max-width: 768px) {
-    position: relative;
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    padding: 0;
     height: auto;
   }
 `;
 
 const Logo = styled.img`
-  display: none;
+  width: 120px;
+  height: 120px;
+
 
   @media (max-width: 768px) {
+    position: relative;
+    margin: 0 auto;
     display: block;
-    position: fixed;
-    top: 20px;
-    left: 20px;
+  }
+
+  @media (min-width: 768px) {
+    position:relative;
+    top: 2px;
+    right: 500px;
     z-index: 15;
-    width:100px;
-    height:100px;
   }
 `;
 
 const MenuItem = styled(Link)`
-  color: white;
+  color: ${colors.bmeny};
   text-decoration: none;
-  margin: 5px;
+  margin: 5px 10px;
   padding: 10px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: top;
-  width: 100%;
-  font-size: 20px; 
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: bold;
   transition: all 0.3s ease;
+  background-color: ${colors.accent};
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
+    background-color: ${colors.secondary};
+    color: ${colors.textDark};
+    border-radius: 5px;
     transform: scale(1.1);
-    color: black;
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 20px; 
-    font-weight: 800;
-    color: black; /* Ändra textfärg till svart i mobil läge */
-  }
-`;
-
-const Spacer = styled.div`
-  
-   @media (max-width: 768px) {
-    height: 30px;
+    width: 80%;
+    margin: 6px auto; /* Centrera objekten */
+    text-align: center;
+    padding: 8px;
+    font-size: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -98,7 +107,7 @@ const HamburgerButton = styled.button`
   align-items: center;
   height: 45px;
   width: 45px;
-  background-color: #C37A47;
+  background-color: ${colors.secondary};
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -112,7 +121,7 @@ const HamburgerButton = styled.button`
     width: 25px;
     height: 3px;
     margin: 4px 0;
-    background-color: white;
+    background-color: ${colors.primary};
     transition: transform 0.3s, opacity 0.3s;
   }
 
@@ -132,34 +141,7 @@ const HamburgerButton = styled.button`
     transform: rotate(-55deg) translate(10px, -5px);
   }
 `;
-const LogoutButton = styled(Link)`
-   color: white;
-  text-decoration: none;
-  margin: 5px;
-  padding: 10px 20px;
-  display: flex;
 
-  justify-content: center;
-  align-items: top;
-  width: 100%;
-  font-size: 16px; 
-  font-weight: 600;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: scale(1.1);
-    color: black;
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 20px; 
-    font-weight: 800;
-    color: black; /* Ändra textfärg till svart i mobil läge */
-  }
-
-`;
 const MenuItems = styled.div`
   display: flex;
   flex-direction: row;
@@ -171,15 +153,14 @@ const MenuItems = styled.div`
     top: 0;
     right: 0;
     height: 100%;
-    background-color: white;
+    background-color: ${colors.bmeny};
     transform: translateX(100%);
     animation: ${props => (props.open ? slideIn : slideOut)} 0.5s forwards;
-    justify-content: flex-start; /* Justera för att placera menyn högre upp */
+    justify-content: flex-start;
     align-items: center;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
-    padding-top: 65px; /* Justera för att flytta upp menyn */
-    border-left: 2px solid black; /* Lägg till svart kant på vänster sida */
+    padding-top: 65px;
   }
 `;
 
@@ -195,21 +176,15 @@ const Menu = () => {
     setIsOpen(false);
   };
 
-  const handleLogout = () => {
-    auth.signOut();
-    closeMenu();
-  };
-
   return (
     <MenuContainer>
+      <Logo src={logo} alt="logo" />
       <HamburgerButton className={isOpen ? 'open' : ''} onClick={toggleMenu}>
         <span></span>
         <span></span>
         <span></span>
       </HamburgerButton>
-
       <MenuItems open={isOpen}>
-        {isOpen && <Logo src={logo} alt="logo" width={50} height={50} />}
         <MenuItem to="/news" onClick={closeMenu}>Nyheter</MenuItem>
         <MenuItem to="/competitions" onClick={closeMenu}>Tävlingar</MenuItem>
         <MenuItem to="/gallery/:folder" onClick={closeMenu}>Galleri</MenuItem>
@@ -219,19 +194,13 @@ const Menu = () => {
         <MenuItem to="/association" onClick={closeMenu}>Föreningen</MenuItem>
         <MenuItem to="/sponsorer" onClick={closeMenu}>Sponsorer</MenuItem>
         <MenuItem to="/public" onClick={closeMenu}>Öppettider</MenuItem>
-       
-        <Spacer />
-        {user ? (
-          <><MenuItem to="/panel" onClick={closeMenu}>Adminpanel</MenuItem><LogoutButton onClick={handleLogout}><FaSignOutAlt size={24}/></LogoutButton></>
-        ) : (
-          <MenuItem to="/admin" onClick={closeMenu}><FaSignInAlt size={24}/></MenuItem>
-        )}
       </MenuItems>
     </MenuContainer>
   );
 };
 
 export default Menu;
+
 
 
 

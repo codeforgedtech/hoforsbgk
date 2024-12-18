@@ -29,14 +29,14 @@ const FullNewsBox = styled.div`
 const Title = styled.h2`
   margin-bottom: 20px;
   color: #333333;
-  font-size: 24px;
+  font-size: 30px;
 `;
 
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column; /* Default direction for mobile */
   gap: 20px;
-  
+ 
   @media (min-width: 768px) {
     flex-direction: row; /* Side by side on desktop */
     align-items: flex-start;
@@ -44,9 +44,10 @@ const ContentContainer = styled.div`
 `;
 
 const Content = styled.div`
-  color: #666666;
+color: #666666;
   font-size: 18px;
   flex: 1; /* Take up remaining space */
+  border-radius: 8px
 `;
 
 const Image = styled.img`
@@ -122,10 +123,11 @@ const FullNews = () => {
     <FullNewsContainer>
       <SEO title={newsItem.title} description="Senaste nyheterna från vår klubb" keywords="nyheter, klubb, senaste nyheter" />
       <FullNewsBox>
-        <Title>{newsItem.title}</Title>
+      <Title>{newsItem.title}</Title>
         <ContentContainer>
+        <Content dangerouslySetInnerHTML={{ __html: newsItem.content }} />
           {newsItem.image1 && <Image src={newsItem.image1} alt="news" />}
-          <Content dangerouslySetInnerHTML={{ __html: newsItem.content }} />
+         
         </ContentContainer>
        
         <BackButton onClick={handleBack}>Tillbaka</BackButton>

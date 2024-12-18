@@ -9,7 +9,7 @@ import Courses from './components/Courses';
 import GalleryUpload from './components/GalleryUpload';
 import Rules from './components/Rules';
 import FullNews from './components/FullNews';
-
+import SponsorsMarquee from './components/SponsorsMarquee';
 import Public from './components/Public';
 import News from './components/News';
 import Products from './components/Products';
@@ -22,6 +22,7 @@ import CreateCompetition from './components/CreateCompetition';
 import Competitions from './components/Competitions';
 import CookieConsent from './components/CookieConsent'; // Importera din CookieConsent
 import SEO from './components/SEO';
+import Snowflakes from './components/Snowflakes';
 const App = () => {
   
   const [cookieAccepted, setCookieAccepted] = useState(localStorage.getItem('cookieConsent') === 'accepted');
@@ -38,6 +39,7 @@ const App = () => {
         <SEO title="Hofors BKG" description="Välkommen till Hofors BKG's officiella webbplats" keywords="hofors, bangolf, klubb, nyheter, tävlingar" />
           <Header />
           {cookieAccepted || <CookieConsent onAccept={handleCookieAcceptance} />}
+          <Snowflakes count={100} />
           <Routes>
             <Route path="/" element={<News />} />
             <Route path="/association" element={<Association />} />
@@ -58,6 +60,7 @@ const App = () => {
             <Route path="/create-competition" element={<PrivateRoute component={CreateCompetition} />} />
             <Route path="/competitions" element={<Competitions />} />
           </Routes>
+          <SponsorsMarquee/>
           <Footer />
          
         </div>

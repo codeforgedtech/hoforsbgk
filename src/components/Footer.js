@@ -1,93 +1,140 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa';
 import anti from "../assets/anti.png";
-
+import backgroundImage from '../assets/footer-backgrund.jpg';
 const FooterContainer = styled.footer`
-  position: relative;
-  bottom: 0;
-  background-color: #C37A47;
-  color: white;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 1.0)
+    ), 
+      url(${backgroundImage});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white; /* Textfärgen ändras till vit för bättre kontrast */
   padding: 20px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+
+  /* För att centrera innehållet på mobilen */
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center; /* Centrerar horisontellt */
+    justify-content: center; /* Centrerar vertikalt */
+    text-align: center; /* Säkerställer att texten centreras */
+  }
 `;
 
 const FooterText = styled.p`
-  margin: 0;
-  font-size: 20px;
-`;
-
-const FooterCode = styled.div`
+  margin: 5px 0;
   text-align: center;
-  padding: 10px;
-  background-color: #333;
-  color: #FFF;
-  border-radius: 10px;
-  margin-top: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  font-weight: bold;
 
-  a {
-    color: #C37A47;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #E94E1B;
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 10px;
+  @media (min-width: 768px) {
+    font-size: 16px;
   }
 `;
 
 const ContactInfo = styled.div`
-  margin-top: 10px;
+  margin: 1px 0;
   text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.4;
+
+  p {
+    margin: 4px 0;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const SocialMedia = styled.div`
-  margin-top: 10px;
+  margin-top: 2px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  gap: 15px;
 
   a {
     color: white;
-    margin: 0 10px;
     font-size: 24px;
-    transition: color 0.3s;
+    transition: transform 0.3s, color 0.3s;
 
     &:hover {
-      color: #4267B2; /* Facebook blue */
+      color: #BBD4E1; /* Ljus färg */
+      transform: scale(1.2);
     }
+  }
+
+  @media (min-width: 768px) {
+    gap: 20px;
+    font-size: 28px;
   }
 `;
 
 const AntiDopingContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 15px;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: center;
+  }
 `;
 
 const AntiDopingLink = styled.a`
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+    margin-right: 15px;
+  }
 `;
 
 const AntiDopingImage = styled.img`
-  width: 160px; /* Adjust the width as needed */
-  height: auto; /* Maintain aspect ratio */
-  margin-right: 10px; /* Space between image and text */
+  width: 120px;
+  height: auto;
+
+    transition: transform 0.3s, color 0.3s;
+
+    &:hover {
+      color: #BBD4E1; /* Ljus färg */
+      transform: scale(1.2);
+    }
+  @media (min-width: 768px) {
+    width: 150px;
+  }
+`;
+
+const FooterCode = styled.div`
+  text-align: center;
+  margin-top: 2px;
+
+  a {
+    display: inline-block;
+     transition: transform 0.3s, color 0.3s;
+    img {
+      width: 100px;
+    }
+       &:hover {
+      color: #BBD4E1; /* Ljus färg */
+      transform: scale(1.2);
+    }
+  }
 `;
 
 const Footer = () => (
   <FooterContainer>
-    <FooterText>© 2024 Hofors BGK.</FooterText>
+    <FooterText>© 2024 Hofors BGK. Alla rättigheter förbehållna.</FooterText>
 
     <ContactInfo>
       <p>Adress: Skolgatan 21, SE-813 30 Hofors</p>
@@ -97,9 +144,13 @@ const Footer = () => (
 
     <AntiDopingContainer>
       <AntiDopingLink href="https://www.antidoping.se/" target="_blank" rel="noopener noreferrer">
-        <AntiDopingImage src={anti} alt="AntiDoping" />
+        <AntiDopingImage src={anti} alt="AntiDoping Logo" />
       </AntiDopingLink>
-      <FooterCode><a href="https://codeforged.se" target="_blank" rel="noopener noreferrer">Forged by CodeForged</a></FooterCode>
+      <FooterCode>
+        <a href="https://codeforged.se" target="_blank" rel="noopener noreferrer">
+          <img src="https://codecraftsman.se/assets/codelogo-CqDVW-XE.svg" alt="Code Forged Logo" />
+        </a>
+      </FooterCode>
     </AntiDopingContainer>
 
     <SocialMedia>
@@ -109,9 +160,16 @@ const Footer = () => (
       <a href="https://www.instagram.com/hofors.bangolf/" target="_blank" rel="noopener noreferrer">
         <FaInstagram />
       </a>
+      <a href="https://www.instagram.com/hofors.bangolf/" target="_blank" rel="noopener noreferrer">
+        <FaTiktok />
+      </a>
     </SocialMedia>
   </FooterContainer>
 );
 
 export default Footer;
+
+
+
+
 
