@@ -1,43 +1,49 @@
 import React from 'react';
 import styled from 'styled-components';
 import SEO from './SEO';
-const RulesContainer = styled.div`
-  padding: 20px;
-  margin: 20px;
-  min-height: 60vh;
-  background-color: #FFF;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-  @media (max-width: 768px) {
-    padding: 10px;
-    margin: 10px;
-  }
+const RulesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  
+  margin: 20px;
+  background: linear-gradient(135deg, #f3f4f6, #ffffff);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 `;
 
 const Title = styled.h1`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 2em;
+  grid-column: 1 / -1;
+  margin-bottom: 40px;
+  font-size: 2.5em;
   color: #C37A47;
+  font-weight: bold;
   text-align: center;
+  letter-spacing: 1px;
 
   @media (max-width: 768px) {
-    margin-top: 20px;
-    font-size: 1.5em;
+    font-size: 1.8em;
   }
 `;
 
 const RuleWraper = styled.div`
+  background-color: #ffffff;
   padding: 20px;
-  margin: 20px auto;
-  width: 800px;
-  border-radius: 10px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  grid-column: 1 / -1; /* Makes the wrapper span the whole width */
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
 
   @media (max-width: 768px) {
-    padding: 10px;
-    margin: 10px auto;
-    width: 90%;
+    padding: 15px;
   }
 `;
 
@@ -56,7 +62,7 @@ const Rule = styled.p`
 const Rules = () => {
   return (
     <RulesContainer>
-          <SEO title="Regler" description="Läs om reglerna för bangolf." keywords="regler, bangolf, hofors" />  
+      <SEO title="Regler" description="Läs om reglerna för bangolf." keywords="regler, bangolf, hofors" />
       <Title>Regler</Title>
       <RuleWraper>
         <Rule>Max sju slag per bana. Det innebär att har du slagit sex slag utan att få i bollen i koppen, så blir ditt resultat på banan sju slag.</Rule>
@@ -72,3 +78,4 @@ const Rules = () => {
 };
 
 export default Rules;
+

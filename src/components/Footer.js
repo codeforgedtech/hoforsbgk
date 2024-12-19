@@ -147,7 +147,7 @@ const Footer = () => (
         <AntiDopingImage src={anti} alt="AntiDoping Logo" />
       </AntiDopingLink>
       <FooterCode>
-        <a href="https://codeforged.se" target="_blank" rel="noopener noreferrer">
+        <a href="https://codecraftsman.se" target="_blank" rel="noopener noreferrer">
           <img src="https://codecraftsman.se/assets/codelogo-CqDVW-XE.svg" alt="Code Forged Logo" />
         </a>
       </FooterCode>
@@ -160,7 +160,7 @@ const Footer = () => (
       <a href="https://www.instagram.com/hofors.bangolf/" target="_blank" rel="noopener noreferrer">
         <FaInstagram />
       </a>
-      <a href="https://www.instagram.com/hofors.bangolf/" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.tiktok.com/@bangolfklubben.ho" target="_blank" rel="noopener noreferrer">
         <FaTiktok />
       </a>
     </SocialMedia>

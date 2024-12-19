@@ -43,62 +43,106 @@ const tipsImages = {
 };
 
 const CourtContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: 20px;
-  padding: 20px;
-  min-height: 60vh;
-  color: #333;
-  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 40px 30px;
   margin: 20px;
-  background-color: #FFF;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    padding: 10px;
-  }
+  background: linear-gradient(135deg, #f3f4f6, #ffffff);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 `;
 
 const Title = styled.h1`
-  grid-column: 1 / -1; /* Gör att titeln sträcker sig över hela gridens bredd */
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 2em;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 3em;
   color: #C37A47;
-  text-align: center; /* Centrera texten horisontellt */
-  
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1.2px;
+`;
+
+const CourtList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+`;
+
+const CourtCard = styled.li`
+  background-color: #ffffff;
+  border: 2px solid #ececec;
+  border-radius: 15px;
+  padding: 20px;
+  width: calc(25% - 20px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+
   @media (max-width: 768px) {
-    margin-top: 20px;
-    font-size: 1.5em;
+    width: calc(50% - 20px);
+  }
+  @media (max-width: 480px) {
+    width: calc(100% - 20px);
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   }
 `;
 
 const CourtImage = styled.img`
-  width: 80%;
-  max-width: 80%;
-  height: auto;
+  width: 100%;
+  height: 200px;
   border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 15px;
+`;
 
-  @media (max-width: 768px) {
-    width: 100%;
-    max-width: 100%;
-  }
+const CourtName = styled.h2`
+  font-size: 2em;
+  margin: 15px 0 10px;
+  color: #C37A47;
+  font-weight: bold;
+  text-align: center;
 `;
 
 const TipsButton = styled.button`
-  margin-top: 10px;
+  display: block;
+  margin: 0 auto;
+  padding: 12px 30px;
+  font-size: 16px;
+  color: #ffffff;
   background-color: #C37A47;
-  color: white;
   border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 1em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, transform 0.3s;
 
   &:hover {
-    background-color: #a75b34;
+    background-color: #b2693f;
+    transform: translateY(-2px);
+  }
+`;
+
+const ModalCloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #333;
+
+  &:hover {
+    color: #C37A47;
   }
 `;
 
@@ -153,17 +197,20 @@ const Court = () => {
 
   return (
     <>
-     
       <CourtContainer>
-      <SEO title="Banor" description="Upptäck våra olika bangolfbanor." keywords="banor, bangolf, hofors" />
-      <Title>Banor</Title>
-        {courtsData.map((court, index) => (
-          <div key={index}>
-            <h2>{court.nr} - {court.name}</h2>
-            <CourtImage src={court.image} alt={court.name} />
-            <TipsButton onClick={() => openModal(tipsImages[court.nr])}>Tips för banan</TipsButton>
-          </div>
-        ))}
+        <SEO title="Banor" description="Upptäck våra olika bangolfbanor." keywords="banor, bangolf, hofors" />
+        <Title>Banor</Title>
+        <CourtList>
+          {courtsData.map((court, index) => (
+            <CourtCard key={index}>
+              <CourtImage src={court.image} alt={court.name} />
+              <CourtName>
+                {court.nr} - {court.name}
+              </CourtName>
+              <TipsButton onClick={() => openModal(tipsImages[court.nr])}>Tips för banan</TipsButton>
+            </CourtCard>
+          ))}
+        </CourtList>
       </CourtContainer>
       <Modal
         isOpen={modalIsOpen}
@@ -171,7 +218,7 @@ const Court = () => {
         style={customStyles}
         contentLabel="Tips Modal"
       >
-        <button onClick={closeModal} style={{ float: 'right', cursor: 'pointer', fontSize: '1.5em' }}>&times;</button>
+        <ModalCloseButton onClick={closeModal}>&times;</ModalCloseButton>
         <img src={currentTipImage} alt="Tip" style={{ width: '100%', height: 'auto' }} />
       </Modal>
     </>
@@ -179,4 +226,5 @@ const Court = () => {
 };
 
 export default Court;
+
 

@@ -34,11 +34,11 @@ const Title = styled.h2`
 
 const ContentContainer = styled.div`
   display: flex;
-  flex-direction: column; /* Default direction for mobile */
+  flex-direction: column; /* Bilden är högst upp på mobil */
   gap: 20px;
- 
+
   @media (min-width: 768px) {
-    flex-direction: row; /* Side by side on desktop */
+    flex-direction: row; /* Bilden och texten bredvid varandra på desktop */
     align-items: flex-start;
   }
 `;
@@ -51,14 +51,18 @@ color: #666666;
 `;
 
 const Image = styled.img`
-  width: 100%; /* Default to full width on mobile */
+  width: 100%; /* Full bredd på mobil */
   height: auto;
   border-radius: 10px;
-  object-fit: cover; /* Ensure the image covers the space nicely */
+  object-fit: cover;
+
+  /* Placera bilden högst upp på mobil */
+  order: -1;
 
   @media (min-width: 768px) {
-    width: 50%; /* 50% width on desktop */
-    margin-right: 20px; /* Space between image and text on desktop */
+    width: 50%; /* Halva bredden på desktop */
+    margin-right: 20px; /* Mellanrum mellan bild och text */
+    order: 0; /* Återställ ordningen på desktop */
   }
 `;
 

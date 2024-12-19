@@ -2,116 +2,122 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { firestore } from '../firebase';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
-import SEO from './SEO';
 
-const CompetitionsContainer = styled.div`
-  padding: 20px;
+const FullCompetitionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 40px 30px;
   margin: 20px;
-  min-height: 60vh;
-  background-color: #FFF;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #f3f4f6, #ffffff);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+`;
+
+const CompetitionsBox = styled.div`
+  background-color: #ffffff;
+  padding: 50px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 1000px;
+  text-align: left;
 `;
 
 const Title = styled.h1`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 2em;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 3em;
   color: #C37A47;
+  font-weight: bold;
   text-align: center;
+  letter-spacing: 1.2px;
 `;
 
-const CompetitionsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+const CompetitionsList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+`;
+
+const CompetitionItem = styled.li`
+  background-color: #ffffff;
+  border: 2px solid #ececec;
+  border-radius: 15px;
+  padding: 20px;
+  width: calc(25% - 20px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    width: calc(50% - 20px);
   }
-`;
+  @media (max-width: 480px) {
+    width: calc(100% - 20px);
+  }
 
-const CompetitionItem = styled.div`
-  position: relative;
-`;
-
-const ImageContainer = styled.div`
-  position: relative;
-  width: 100%;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const CompetitionImage = styled.img`
   width: 100%;
-  height: auto;
-  border-radius: 10px;
+  height: 250px;
+  border-radius: 15px;
+  object-fit: cover;
+  margin-bottom: 20px;
 `;
 
-const OverlayContainer = styled.div`
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 5px 10px;
-  border-radius: 5px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-`;
-
-const NameOverlay = styled.h2`
-  margin: 0;
-  color: white;
-`;
-
-const CompetitionLink = styled.a`
-  color: #E94E1B;
-  text-decoration: none;
-  background-color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  margin-top: 5px; /* Add some space on mobile */
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 768px) {
-    align-self: flex-start; /* Align link to the left on mobile */
-  }
+const CompetitionName = styled.h2`
+  font-size: 2em;
+  margin: 15px 0 10px;
+  color: #C37A47;
+  font-weight: bold;
+  text-align: center;
 `;
 
 const CompetitionType = styled.p`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 5px 10px;
-  border-radius: 5px;
+  font-size: 1.4em;
+  color: #666;
+  margin: 10px 0;
+  text-align: center;
 `;
 
-const CompetitionDetails = styled.div`
-  margin-top: 10px;
+const LinksContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
 `;
 
-const Type = styled.p`
-  color: #666666;
-  margin: 0 0 10px 0;
+const StyledLink = styled.a`
+  display: inline-block;
+  margin-top: 10px;
+  padding: 12px 30px;
+  font-size: 16px;
+  background-color: #C37A47;
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, transform 0.3s;
+
+  &:hover {
+    background-color: #b2693f;
+    transform: translateY(-2px);
+  }
 `;
 
 const NoCompetitionsMessage = styled.p`
   text-align: center;
-  color: #666666;
-  font-size: 1.2em;
+  color: #555;
+  font-size: 1.5em;
 `;
 
 const Competitions = () => {
@@ -124,7 +130,7 @@ const Competitions = () => {
       const querySnapshot = await getDocs(q);
       const competitionsData = querySnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
       setCompetitions(competitionsData);
     };
@@ -132,43 +138,41 @@ const Competitions = () => {
     fetchCompetitions();
   }, []);
 
-  const DEFAULT_IMAGE_URL = 'https://firebasestorage.googleapis.com/v0/b/hoforsbgk.appspot.com/o/competitions%2Fblank.png?alt=media&token=651c0dd1-de67-48b2-85d9-c390448aac97'; // Länk till standardbilden
+  const DEFAULT_IMAGE_URL =
+    'https://firebasestorage.googleapis.com/v0/b/hoforsbgk.appspot.com/o/competitions%2Fblank.png?alt=media&token=651c0dd1-de67-48b2-85d9-c390448aac97';
 
   return (
-    <CompetitionsContainer>
-      <SEO title="Tävlingar" description="Delta i våra bangolftävlingar." keywords="tävlingar, bangolf, hofors" />
+    <FullCompetitionsContainer>
       <Title>Tävlingar</Title>
       {competitions.length === 0 ? (
-        <NoCompetitionsMessage>Beklagar, inga resultat inlagda.</NoCompetitionsMessage>
+        <NoCompetitionsMessage>Beklagar, inga tävlingar är inlagda.</NoCompetitionsMessage>
       ) : (
-        <CompetitionsGrid>
-          {competitions.map(item => (
-            <CompetitionItem key={item.id}>
-              <ImageContainer>
-                <CompetitionImage src={item.image || DEFAULT_IMAGE_URL} alt={item.name} />
-                <OverlayContainer>
-                  <NameOverlay>{item.name}</NameOverlay>
-                  {item.links && item.links.length > 0 && (
-                    <CompetitionDetails>
-                      {item.links.map((link, index) => (
-                        <CompetitionLink key={index} href={link} target="_blank" rel="noopener noreferrer">
-                          Resultat {index + 1}
-                        </CompetitionLink>
-                      ))}
-                    </CompetitionDetails>
-                  )}
-                </OverlayContainer>
-                <CompetitionType>{item.type}</CompetitionType>
-              </ImageContainer>
+        <CompetitionsList>
+          {competitions.map(competition => (
+            <CompetitionItem key={competition.id}>
+              <CompetitionImage src={competition.image || DEFAULT_IMAGE_URL} alt={competition.name} />
+              <CompetitionName>{competition.name}</CompetitionName>
+              <CompetitionType>{competition.type}</CompetitionType>
+              {competition.links && competition.links.length > 0 && (
+                <LinksContainer>
+                  {competition.links.map((link, index) => (
+                    <StyledLink key={index} href={link} target="_blank" rel="noopener noreferrer">
+                      {`Se resultat ${index + 1}`}
+                    </StyledLink>
+                  ))}
+                </LinksContainer>
+              )}
             </CompetitionItem>
           ))}
-        </CompetitionsGrid>
+        </CompetitionsList>
       )}
-    </CompetitionsContainer>
+    </FullCompetitionsContainer>
   );
 };
 
 export default Competitions;
+
+
 
 
 
