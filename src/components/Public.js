@@ -11,11 +11,14 @@ const ContentContainer = styled.div`
 `;
 
 const Title = styled.h1`
- margin-top:40px;
-  margin-bottom:20px;
-  font-size: 2em;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 3em;
   color: #C37A47;
-  text-align: center; /* Centrera titeln horisontellt */
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1.2px;
+
 
 `;
 

@@ -30,21 +30,22 @@ const Title = styled.h1`
 `;
 
 const RuleWraper = styled.div`
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-  grid-column: 1 / -1; /* Makes the wrapper span the whole width */
+background-color: #ffffff;
+padding: 20px; /* Mindre padding för mobil */
+border-radius: 10px;
+width: 100%; /* Anpassar bredden för mobil */
+max-width: 1220px; /* Breddbegränsning för desktop */
+margin: 0 auto; /* Centrera innehållet */
+text-align: left;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Mindre skugga för ett mjukare utseende */
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  }
-
-  @media (max-width: 768px) {
-    padding: 15px;
-  }
+@media (max-width: 768px) {
+  padding: 15px; /* Ännu mindre padding för smala skärmar */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Mildare skugga för mobil */
+  border-radius: 8px; /* Lite rundare hörn */
+  width: 80%; /* Mindre bredd för att passa skärmen */
+  margin: 0 auto;
+  margin-bottom: 20px
 `;
 
 const Rule = styled.p`

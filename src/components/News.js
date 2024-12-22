@@ -117,11 +117,14 @@ const NewsItem = styled.div`
 `;
 
 const Title = styled.h1`
-  margin-top: 10px;
-  margin-bottom: 20px;
-  font-size: 2.0em;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 3em;
   color: #C37A47;
-  text-align: left;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1.2px;
+
 `;
 
 const TitleRubrik = styled.h2`

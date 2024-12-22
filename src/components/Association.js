@@ -17,10 +17,14 @@ const ContentContainer = styled.div`
 `;
 
 const ContentWrap = styled.div`
-  padding: 20px;
-  margin: 20px auto;
-  width: 800px;
-  border-radius: 10px;
+ background-color: #ffffff;
+padding: 40px;
+border-radius: 10px;
+width: 98%;
+max-width: 1220px; /* Bredden för desktop */
+margin: 0 auto; /* Centrera innehållet */
+text-align: left;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
     padding: 10px;
@@ -30,11 +34,14 @@ const ContentWrap = styled.div`
 `;
 
 const Title = styled.h1`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 2em;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 3em;
   color: #C37A47;
+  font-weight: bold;
   text-align: center;
+  letter-spacing: 1.2px;
+
 `;
 
 const Paragraph = styled.p`

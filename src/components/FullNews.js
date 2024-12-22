@@ -14,24 +14,47 @@ const FullNewsContainer = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 98%; /* Make sure container spans the full width */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
+@media (max-width: 768px) {
+  display: flex; /* Flexbox för centrering */
+  justify-content: center; /* Centrera horisontellt */
+  align-items: center; /* Centrera vertikalt */
+  min-height: 100vh; /* Se till att containern sträcker sig över hela skärmen */
+  margin: 0 auto; /* Centrera även horisontellt med auto-marginaler */
 `;
 
 const FullNewsBox = styled.div`
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 10px;
-  width: 98%;
-  max-width: 2500px; /* Adjust as needed */
-  text-align: left;
-  box-sizing: border-box; /* Include padding in width calculation */
+background-color: #ffffff;
+padding: 20px; /* Mindre padding för mobil */
+border-radius: 10px;
+width: 100%; /* Anpassar bredden för mobil */
+max-width: 1220px; /* Breddbegränsning för desktop */
+margin: 0 auto; /* Centrera innehållet */
+text-align: left;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Mindre skugga för ett mjukare utseende */
+
+@media (max-width: 768px) {
+  padding: 15px; /* Ännu mindre padding för smala skärmar */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Mildare skugga för mobil */
+  border-radius: 8px; /* Lite rundare hörn */
+  width: 95%; /* Mindre bredd för att passa skärmen */
+  margin: 0 auto;
+}
 `;
 
 const Title = styled.h2`
-  margin-bottom: 20px;
-  color: #333333;
-  font-size: 30px;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 3em;
+  color: #C37A47;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1.2px;
+@media (max-width: 768px) {
+  
+  font-size: 2em;
+  
+}
 `;
-
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column; /* Bilden är högst upp på mobil */
