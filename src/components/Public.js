@@ -1,107 +1,107 @@
 import React from 'react';
 import styled from 'styled-components';
 import SEO from './SEO';
+
 const ContentContainer = styled.div`
   padding: 20px;
-  margin: 20px;
-  background-color: #FFF;
+  margin: 20px auto; /* Centrera horisontellt */
+  min-height: 60vh;
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  min-height: 60vh;
+  width: 98%; /* Nästan full bredd */
+  max-width: 1220px; /* Begränsa bredden */
+  box-sizing: border-box;
+
+  display: flex; /* Flexbox-layout */
+  flex-direction: column; /* Stapla innehåll */
+  justify-content: center; /* Centrera vertikalt */
+  align-items: center; /* Centrera horisontellt */
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    margin: 10px auto;
+    min-height: 100vh; /* Sträck över hela höjden */
+  }
 `;
 
 const Title = styled.h1`
   margin-top: 0;
-  margin-bottom: 40px;
-  font-size: 3em;
+  margin-bottom: 20px;
+  font-size: 2.5em;
   color: #C37A47;
   font-weight: bold;
   text-align: center;
   letter-spacing: 1.2px;
 
-
+  @media (max-width: 768px) {
+    font-size: 2em; /* Mindre textstorlek på mobil */
+    margin-bottom: 15px; /* Mindre marginaler */
+  }
 `;
 
-const Paragraph = styled.p`
-  color: #555555;
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 15px;
+const Title2 = styled.h2`
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 2em;
+  color: #C37A47;
+  font-weight: bold;
   text-align: center;
+  letter-spacing: 1.2px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5em; /* Anpassad textstorlek */
+    margin-bottom: 15px;
+  }
 `;
 
-const PriceList = styled.div`
-  color: #555555;
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 0;
+const Subtitle = styled.p`
+  font-size: 1.5em;
+  color: #555;
+  text-align: center;
+  margin-bottom: 20px;
 
-  & > p {
-    margin: 5px 0;
+  @media (max-width: 768px) {
+    font-size: 1.2em; /* Mindre textstorlek */
+    margin-bottom: 10px;
   }
-    text-align: center;
 `;
 
-const OpeningHours = styled.div`
-  margin: 20px 0;
-  font-size: 18px;
+const Paragraph = styled.div`
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 1020px; /* Begränsa bredden */
+  margin: 0 auto;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 
-  & > p {
-    margin: 10px 0;
+  @media (max-width: 768px) {
+    padding: 15px; /* Mindre padding */
+    border-radius: 8px; /* Rundare hörn */
+    width: 95%; /* Anpassa bredden för små skärmar */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Mjukare skugga */
   }
-
-  & b {
-    display: block;
-    margin-top: 10px;
-    font-size: 18px;
-    color: #333;
-  }
-
-  & i {
-    display: block;
-    margin-top: 5px;
-    font-style: italic;
-    color: #777;
-  }
-    text-align: center;
 `;
 
 const Content = () => (
   <ContentContainer>
-     <SEO title="Öppettider" description="Offentlig information om Öppetider" keywords="offentlig, information, Öppettider" />
+    <SEO title="Öppettider" description="Offentlig information om Öppetider" keywords="offentlig, information, Öppettider" />
 
-    <Title>Öppettider</Title>
+    <Subtitle>Kommer snart</Subtitle>
+    <Title>Öppettider 2025</Title>
     <Paragraph>
-      Hofors Bangolfklubb driver en modern 18-hålsbana i Hofors centrum.
-      Godkänd som tävlingsbana av Svenska Bangolfförbundet.
-    </Paragraph>
-    <Paragraph>
+      Hofors Bangolfklubb driver en modern 18-hålsbana i Hofors centrum.<p></p>
+      Godkänd som tävlingsbana av Svenska Bangolfförbundet.<p></p>
       I skön parkmiljö alldeles intill Hofors centrum kan du och dina vänner spela bangolf på helt nyrustade banor.
-    </Paragraph>
-    <OpeningHours>
-      <p><b>Öppettider 2024</b></p>
-      <b>Juni</b>
-      <p>Mån - Lör: 13:00 - 20:00</p>
-      <p>Sön: 14:00 - 20:00</p>
-      <i>Tisdag: Sista utsläpp 17:00 för tävling.</i>
-      <b>Juli</b>
-      <p>Mån - Lör: 13:00 - 20:00</p>
-      <p>Sön: 14:00 - 20:00</p>
-      <i>Tisdag: Sista utsläpp 17:00 för tävling.</i>
-      <b>Augusti</b>
-      <p>(Fram till skolorna börjar)</p>
-      <p>Mån - Lör: 13:00 - 20:00</p>
-      <p>Sön: 14:00 - 20:00</p>
-      <i>Tisdag: Sista utsläpp 17:00 för tävling</i>
-    </OpeningHours>
-    <PriceList>
-      <p><b>Prislista: (per varv)</b></p>
+      <Title2>Prislista: (per varv)</Title2>
       <p>Vuxna (från 18 år): 60 kr</p>
       <p>Barn 7-17 år: 40 kr</p>
       <p>Pensionär: 40 kr</p>
-
-    </PriceList>
+    </Paragraph>
   </ContentContainer>
 );
 
 export default Content;
+
