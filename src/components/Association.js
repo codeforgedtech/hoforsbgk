@@ -143,7 +143,7 @@ const Content = () => {
               <ListItem>Tävlingsledare: Anna-Lena Holmstrand</ListItem>
               <ListItem>Domare: Rasmus Bergqvist, Marie Ihren, Micke Lindh</ListItem>
               <ListItem>Ungdomsansvarig: Rasmus Bergqvist, Anders Landström, Christian Modén, Anna-Lena Holmstrand</ListItem>
-              <ListItem>UK (uttagningsansvarig): Rasmus Bergqvist</ListItem>
+              <ListItem>UK (uttagningsansvarig): Anders Landström,Benneth Leanders </ListItem>
               <ListItem>Hemsidans Administratör och ansvarige: Christer Holm</ListItem>
             </List>
           </>
