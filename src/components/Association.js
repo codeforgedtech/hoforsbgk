@@ -134,7 +134,7 @@ const Content = () => {
               <ListItem>Vice ordförande: Rasmus Bergqvist</ListItem>
               <ListItem>Kassör: Anna Magnusson</ListItem>
               <ListItem>Sekreterare: Anders Landström</ListItem>
-              <ListItem>Ledamöter: Anna-Lena Holmstrand, Anders Bergqvist, Kenneth Elfström</ListItem>
+              <ListItem>Ledamöter: Anna-Lena Holmstrand, Anders Bergqvist, Kenneth Elfström,Christian Modén</ListItem>
               <ListItem>Valberedning: Benneth Leanders</ListItem>
               <ListItem>Revisor: Tommy Leanders</ListItem>
             </List>
