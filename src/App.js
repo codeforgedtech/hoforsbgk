@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { UserProvider } from './context/UserContext';
-import AdminLogin from './components/AdminLogin';
+import AdminLogin from './components/adminpanel/AdminLogin';
 import Association from './components/Association';
 import Courses from './components/Courses';
-import GalleryUpload from './components/GalleryUpload';
+import GalleryUpload from './components/adminpanel/GalleryUpload';
 import Rules from './components/Rules';
 import FullNews from './components/FullNews';
 import SponsorsMarquee from './components/SponsorsMarquee';
@@ -15,14 +15,15 @@ import News from './components/News';
 import Products from './components/Products';
 import Gallery from './components/Galleri';
 import Sponsorer from './components/Sponsorer';
-import CreateNews from './components/CreateNews';
+import CreateNews from './components/adminpanel/CreateNews';
 import PrivateRoute from './components/PrivateRoute';
-import AdminPanel from './components/AdminPanel';
-import CreateCompetition from './components/CreateCompetition'; 
+import AdminPanel from './components/adminpanel/AdminPanel';
+import CreateCompetition from './components/adminpanel/CreateCompetition'; 
 import Competitions from './components/Competitions';
 import CookieConsent from './components/CookieConsent'; // Importera din CookieConsent
 import SEO from './components/SEO';
-import Snowflakes from './components/Snowflakes';
+import BanorUpload from "./components/adminpanel/BanorUpload"
+import AdminProducts from './components/adminpanel/AdminProducts';
 const App = () => {
   
   const [cookieAccepted, setCookieAccepted] = useState(localStorage.getItem('cookieConsent') === 'accepted');
@@ -36,10 +37,10 @@ const App = () => {
     <UserProvider>
       <Router>
         <div className="App">
-        <SEO title="Hofors BKG" description="Välkommen till Hofors BKG's officiella webbplats" keywords="hofors, bangolf, klubb, nyheter, tävlingar" />
+        <SEO title="Hofors BGK" description="Välkommen till Hofors BKG's officiella webbplats" keywords="hofors, bangolf, klubb, nyheter, tävlingar" />
           <Header />
           {cookieAccepted || <CookieConsent onAccept={handleCookieAcceptance} />}
-          <Snowflakes count={100} />
+
           <Routes>
             <Route path="/" element={<News />} />
             <Route path="/association" element={<Association />} />
@@ -54,6 +55,8 @@ const App = () => {
             <Route path="/news" element={<News />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/upload" element={<PrivateRoute component={GalleryUpload} />} />
+            <Route path="/banor" element={<PrivateRoute component={BanorUpload} />} />
+            <Route path="/edit-products" element={<PrivateRoute component={AdminProducts} />} />
             <Route path="/create-news" element={<PrivateRoute component={CreateNews} />} />
             <Route path="/news/:id" element={<FullNews />} />
             <Route path="/panel" element={<PrivateRoute component={AdminPanel} />} />

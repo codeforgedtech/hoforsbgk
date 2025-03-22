@@ -106,10 +106,17 @@ const NewsGrid = styled.div`
 `;
 
 const NewsItem = styled.div`
-  padding: 30px;
-  border-radius: 10px;
+  padding: 25px;
+  border-radius: 15px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #fff, #f8f8f8);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
 
   @media (max-width: 768px) {
     padding: 15px;
@@ -145,16 +152,18 @@ const Image = styled.img`
 
 const ReadMoreLink = styled(Link)`
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 15px;
   padding: 12px 24px;
-  background-color: #E94E1B;
+  background: linear-gradient(45deg, #E94E1B, #C37A47);
   color: white;
-  border-radius: 5px;
-  text-decoration: none;
+  border-radius: 50px;
   font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: #D4411B;
+    background: linear-gradient(45deg, #D4411B, #a65b30);
+    transform: scale(1.05);
   }
 `;
 

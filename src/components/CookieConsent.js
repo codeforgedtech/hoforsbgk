@@ -6,22 +6,23 @@ const ModalBackdrop = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9999; /* Viktigt för att den ska ligga över allt */
+  padding: 10px 0;
 `;
 
 const ModalContent = styled.div`
   background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
+  padding: 15px;
+  border-radius: 0;
+  box-shadow: none;
+  max-width: 100%;
+  width: 100%;
   text-align: center;
 `;
-
 const Title = styled.h2`
   margin-bottom: 20px;
 `;

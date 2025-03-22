@@ -1,24 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { firestore, storage } from '../firebase';
+import { Link } from 'react-router-dom';
+import { firestore, storage } from '../../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import Resizer from 'react-image-file-resizer';
+import Sidebar from './Sidebar';
+
+// Styled components
+const CreateNewsPage = styled.div`
+  display: flex;
+  flex-direction: col;
+  min-height: 60vh;
+
+  @media (min-width: 768px) {
+    flex-direction: col; // Sätt flexbox-raden när skärmen är större än 768px
+  }
+`;
+
 
 const CreateNewsContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
+  justify-content: flex-start;
   padding: 20px;
   margin: 20px;
   background-color: #FFF;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex-grow: 1;
+
+  @media (min-width: 768px) {
+    width: 60%;  // För större skärmar ska detta ta upp 60% av bredden
+    margin-left: 0;  // Ta bort margin-left på desktop för att centrera
+  }
 `;
 
 const CreateNewsBox = styled.div`
@@ -40,7 +57,6 @@ const Title = styled.h2`
 const Input = styled.input`
   width: calc(100% - 20px);
   margin: 10px;
-  
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -70,12 +86,22 @@ const Button = styled.button`
 `;
 
 const NewsListContainer = styled.div`
-  width: 100%;
+  width: 50%;
   max-width: 600px;
+  margin-top: 40px;
+  flex-grow: 1; // Gör så att denna växer på större skärmar för att ta upp utrymme
+
+  @media (min-width: 768px) {
+    margin-left: 40px;  // Ge ett mellanrum mellan formuläret och nyhetslistan
+    width: 35%; // Nyheterna ska ta upp 35% av utrymmet på större skärmar
+  }
 `;
+
 const Space = styled.p`
-  margin-bottom:40px;
+  margin-bottom: 40px;
+  flex-grow: 1; // Gör så att detta område växer när formuläret är bredare på större skärmar
 `;
+
 const NewsItem = styled.div`
   display: flex;
   justify-content: space-between;
@@ -112,6 +138,7 @@ const EditIcon = styled(FaEdit)`
   }
 `;
 
+// CreateNews Component
 const CreateNews = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -215,57 +242,62 @@ const CreateNews = () => {
   };
 
   return (
-    <CreateNewsContainer>
-      <CreateNewsBox>
-        <Title>{editingId ? 'Redigera Nyhet' : 'Skapa Nyhet'}</Title>
-        <Input 
-          type="text" 
-          placeholder="Titel" 
-          value={title} 
-          onChange={(e) => setTitle(e.target.value)} 
-        />
-        <Space>
-        <ReactQuill 
-          value={content} 
-          onChange={(value) => setContent(value)} 
-          placeholder="Innehåll" 
-          style={{ margin: '10px', height: '180px' }} 
-        />
-      </Space>
-        <Input 
-          type="file" 
-          onChange={(e) => setImage1(e.target.files[0])} 
-        />
-        <Input 
-          type="file" 
-          onChange={(e) => setImage2(e.target.files[0])} 
-        />
-        <Input 
-          type="text" 
-          placeholder="Länk" 
-          value={competitionLink} 
-          onChange={(e) => setCompetitionLink(e.target.value)} 
-        />
-        <Button onClick={handleCreateNews}>
-          {editingId ? 'Uppdatera Nyhet' : 'Skapa Nyhet'}
-        </Button>
-      </CreateNewsBox>
-      
-      <NewsListContainer>
-        <Title>Inlagda Nyheter</Title>
-        {news.map((item) => (
-          <NewsItem key={item.id}>
-            <NewsTitle>{item.title}</NewsTitle>
-            <div>
-              <EditIcon onClick={() => handleEditNews(item)} />
-              <DeleteIcon onClick={() => handleDeleteNews(item.id)} />
-            </div>
-          </NewsItem>
-        ))}
-      </NewsListContainer>
-    </CreateNewsContainer>
+    <CreateNewsPage>
+      <Sidebar/>
+        
+
+      <CreateNewsContainer>
+        <CreateNewsBox>
+          <Title>{editingId ? 'Redigera Nyhet' : 'Skapa Nyhet'}</Title>
+          <Input
+            type="text"
+            placeholder="Titel"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)} />
+          <Space>
+            <ReactQuill
+              value={content}
+              onChange={(value) => setContent(value)}
+              placeholder="Innehåll"
+              style={{ margin: '10px', height: '180px' }} />
+          </Space>
+          <Input
+            type="file"
+            onChange={(e) => setImage1(e.target.files[0])} />
+          <Input
+            type="file"
+            onChange={(e) => setImage2(e.target.files[0])} />
+          <Input
+            type="text"
+            placeholder="Länk"
+            value={competitionLink}
+            onChange={(e) => setCompetitionLink(e.target.value)} />
+          <Button onClick={handleCreateNews}>
+            {editingId ? 'Uppdatera Nyhet' : 'Skapa Nyhet'}
+          </Button>
+        </CreateNewsBox>
+
+        <NewsListContainer>
+          <Title>Inlagda Nyheter</Title>
+          {news.map((item) => (
+            <NewsItem key={item.id}>
+              <NewsTitle>{item.title}</NewsTitle>
+              <div>
+                <EditIcon onClick={() => handleEditNews(item)} />
+                <DeleteIcon onClick={() => handleDeleteNews(item.id)} />
+              </div>
+            </NewsItem>
+          ))}
+        </NewsListContainer>
+      </CreateNewsContainer>
+    </CreateNewsPage>
   );
 };
 
 export default CreateNews;
+
+
+
+
+
 
