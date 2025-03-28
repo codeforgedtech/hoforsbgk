@@ -173,7 +173,7 @@ const Court = () => {
                 onClick={() => openModal(court.imageUrl, court.imageUrl)} // Clicking the image opens the modal
               />
               <CourtName>{court.holes} - {court.name}</CourtName>
-              <TipsButton onClick={() => openModal(court.imageUrl, court.imageUrl)}>Tips för banan</TipsButton>
+              <TipsButton onClick={() => openModal(court.tipImageUrl, court.tipImageUrl)}>Tips för banan</TipsButton>
             </CourtCard>
           ))}
         </CourtList>
@@ -189,9 +189,7 @@ const Court = () => {
         <ModalCloseButton onClick={closeModal}>&times;</ModalCloseButton>
         <img src={currentImage} alt="Golf course" style={{ width: '100%', height: 'auto' }} />
       </Modal>
-
-      {/* Optional Modal for tips image */}
-      {currentTipImage && (
+    
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
