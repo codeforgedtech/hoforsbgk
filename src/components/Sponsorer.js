@@ -34,7 +34,7 @@ const NewsList = styled.ul`
 
 const NewsItem = styled.li`
   margin: 10px;
-  width: calc(33% - 20px);
+  width: calc(15% - 20px);
 
   @media (max-width: 768px) {
     width: calc(50% - 20px);
