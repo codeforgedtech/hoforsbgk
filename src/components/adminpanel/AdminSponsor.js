@@ -123,6 +123,10 @@ const AdminSponsor = () => {
   const [editingId, setEditingId] = useState(null);
   const [newLink, setNewLink] = useState('');
 
+  const [paymentAmount, setPaymentAmount] = useState(''); // Fält för betalningsbelopp
+
+
+
   useEffect(() => {
     const fetchSponsors = async () => {
       const querySnapshot = await getDocs(collection(firestore, 'sponsors'));
@@ -130,6 +134,12 @@ const AdminSponsor = () => {
         id: doc.id,
         ...doc.data()
       }));
+
+
+      // Sortera sponsorer baserat på betalningsbelopp (från högsta till lägsta)
+      sponsorList.sort((a, b) => b.paymentAmount - a.paymentAmount);
+
+
       setSponsors(sponsorList);
     };
 
@@ -141,8 +151,18 @@ const AdminSponsor = () => {
   };
 
   const handleAddSponsor = async () => {
+
+    if (!file || !paymentAmount) {
+      alert('Ladda upp en bild och ange betalningsbelopp!');
+      return;
+    }
+
+    if (sponsors.some(sponsor => sponsor.paymentAmount === parseFloat(paymentAmount))) {
+      alert('Betalningsbeloppet måste vara unikt!');
+
     if (!file) {
       alert('Ladda upp en bild!');
+
       return;
     }
   
@@ -153,12 +173,23 @@ const AdminSponsor = () => {
   
       const docRef = await addDoc(collection(firestore, 'sponsors'), {
         imageUrl,
+
+        sponsorLink: sponsorLink.trim() !== '' ? sponsorLink : null, // Om inget länknamn finns, sätt det till null
+        paymentAmount: parseFloat(paymentAmount),  // Lägg till betalningsbelopp här
+      });
+  
+      setSponsors([...sponsors, { id: docRef.id, imageUrl, sponsorLink: sponsorLink.trim() !== '' ? sponsorLink : null, paymentAmount: parseFloat(paymentAmount) }]);
+      setFile(null);
+      setSponsorLink('');
+      setPaymentAmount('');
+
         sponsorLink: sponsorLink.trim() !== '' ? sponsorLink : null, // Sätter null om ingen länk anges
       });
   
       setSponsors([...sponsors, { id: docRef.id, imageUrl, sponsorLink }]);
       setFile(null);
       setSponsorLink('');
+
       alert('Sponsor tillagd!');
     } catch (error) {
       console.error('Fel vid tillägg av sponsor:', error);
@@ -181,6 +212,22 @@ const AdminSponsor = () => {
     }
   };
 
+
+  const handleEditSponsor = (id, link, payment) => {
+    setEditingId(id);
+    setNewLink(link || ''); // Om det inte finns någon länk, sätt den till en tom sträng
+    setPaymentAmount(payment); // Ladda det aktuella betalningsbeloppet för den sponsor som ska redigeras
+  };
+
+  const handleUpdateSponsor = async (id) => {
+    if (paymentAmount.trim() === '') {
+      alert('Betalningsbeloppet kan inte vara tomt!');
+      return;
+    }
+
+    if (sponsors.some(sponsor => sponsor.id !== id && sponsor.paymentAmount === parseFloat(paymentAmount))) {
+      alert('Betalningsbeloppet måste vara unikt!');
+
   const handleEditSponsor = (id, link) => {
     setEditingId(id);
     setNewLink(link);
@@ -189,15 +236,28 @@ const AdminSponsor = () => {
   const handleUpdateSponsor = async (id) => {
     if (newLink.trim() === '') {
       alert('Länken kan inte vara tom!');
+
       return;
     }
 
     try {
       await updateDoc(doc(firestore, 'sponsors', id), {
+
+        sponsorLink: newLink.trim() !== '' ? newLink : null, // Om länk är tom, sätt den till null
+        paymentAmount: parseFloat(paymentAmount) // Uppdatera betalningsbeloppet
+      });
+
+      setSponsors(sponsors.map(sponsor => sponsor.id === id ? { 
+        ...sponsor, 
+        sponsorLink: newLink.trim() !== '' ? newLink : null, 
+        paymentAmount: parseFloat(paymentAmount) 
+      } : sponsor));
+=======
         sponsorLink: newLink
       });
 
       setSponsors(sponsors.map(sponsor => sponsor.id === id ? { ...sponsor, sponsorLink: newLink } : sponsor));
+
       setEditingId(null);
       alert('Sponsor uppdaterad!');
     } catch (error) {
@@ -214,6 +274,43 @@ const AdminSponsor = () => {
 
         <Form>
           <Input type="file" accept="image/*" onChange={handleFileChange} />
+
+          <Input type="text" placeholder="Sponsorens länk (valfritt)" value={sponsorLink} onChange={(e) => setSponsorLink(e.target.value)} />
+          <Input type="number" placeholder="Betalning" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} />
+          <Button onClick={handleAddSponsor}>Lägg till sponsor</Button>
+        </Form>
+
+        {editingId && (
+          <Form>
+            <Input 
+              type="text" 
+              placeholder="Uppdatera sponsorens länk (valfritt)" 
+              value={newLink} 
+              onChange={(e) => setNewLink(e.target.value)} 
+            />
+            <Input 
+              type="number" 
+              placeholder="Uppdatera betalning" 
+              value={paymentAmount} 
+              onChange={(e) => setPaymentAmount(e.target.value)} 
+            />
+            <Button onClick={() => handleUpdateSponsor(editingId)}>Uppdatera sponsor</Button>
+          </Form>
+        )}
+
+        <SponsorList>
+          {sponsors.map((sponsor) => (
+            <SponsorItem key={sponsor.id}>
+              <img src={sponsor.imageUrl} alt="Sponsor" />
+              <p>Betalning: {sponsor.paymentAmount} SEK</p> {/* Visa betalningsbelopp */}
+              <div>
+                <EditIcon onClick={() => handleEditSponsor(sponsor.id, sponsor.sponsorLink || '', sponsor.paymentAmount)} />
+                <DeleteIcon onClick={() => handleDeleteSponsor(sponsor.id, sponsor.imageUrl)} />
+              </div>
+            </SponsorItem>
+          ))}
+        </SponsorList>
+
           <Input type="text" placeholder="Sponsorens länk" value={sponsorLink} onChange={(e) => setSponsorLink(e.target.value)} />
           <Button onClick={handleAddSponsor}>Lägg till sponsor</Button>
         </Form>
@@ -236,11 +333,11 @@ const AdminSponsor = () => {
     </SponsorItem>
   ))}
 </SponsorList>
+
       </Content>
     </Layout>
   );
 };
 
 export default AdminSponsor;
-
 
