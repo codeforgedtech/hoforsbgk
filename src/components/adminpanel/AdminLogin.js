@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { auth } from '../../firebase';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 
@@ -65,46 +65,84 @@ const Button = styled.button`
   }
 `;
 
+const LogoutButton = styled(Button)`
+  background-color: #D4411B;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: #b33915;
+  }
+`;
+
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setUser } = useUser();
+  const { user, setUser } = useUser();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Kolla om en token finns i localStorage
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      setUser({ token: storedToken }); // Sätt användaren som inloggad
+      navigate('/panel'); // Skicka till admin-panelen
+    }
+  }, [setUser, navigate]);
 
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setUser(userCredential.user);
-      
-      // Set cookie to indicate user is logged in
-      document.cookie = "loggedIn=true";
+      const token = await userCredential.user.getIdToken(); // Hämta JWT-token
 
-      navigate('/panel'); // Navigate to the Panel page after login
+      localStorage.setItem('authToken', token); // Spara token i localStorage
+      setUser(userCredential.user);
+
+      setTimeout(handleLogout, 60 * 60 * 1000); // Automatisk utloggning efter 1 timme (60 min * 60 sek * 1000 ms)
+
+      navigate('/panel'); // Navigera till admin-panelen efter login
     } catch (error) {
-      console.error('Login failed', error);
+      console.error('Inloggning misslyckades', error);
     }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    localStorage.removeItem('authToken'); // Radera token från localStorage
+    setUser(null);
+    navigate('/admin'); // Skicka tillbaka till login-sidan
   };
 
   return (
     <LoginContainer>
       <LoginBox>
-        <Title>Logga in</Title>
-        <Input 
-          type="email" 
-          placeholder="Email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-        />
-        <Input 
-          type="password" 
-          placeholder="Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-        />
-        <Button onClick={handleLogin}>Login</Button>
+        {!user ? (
+          <>
+            <Title>Logga in</Title>
+            <Input 
+              type="email" 
+              placeholder="Email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+            />
+            <Input 
+              type="password" 
+              placeholder="Lösenord" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+            />
+            <Button onClick={handleLogin}>Logga in</Button>
+          </>
+        ) : (
+          <>
+            <Title>Utloggad</Title>
+            <p>Du är inloggad på ett säkert sätt</p>
+            <LogoutButton onClick={handleLogout}>Fortätt</LogoutButton>
+          </>
+        )}
       </LoginBox>
     </LoginContainer>
   );
 };
 
 export default AdminLogin;
+

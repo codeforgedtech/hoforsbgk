@@ -5,27 +5,41 @@ import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebas
 import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Sidebar from './Sidebar';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaImage } from 'react-icons/fa';
 
 const Container = styled.div`
   display: flex;
-  min-height: 100vh;
-  background-color: #f4f4f4;
-  width: 100%;
+  flex-direction: col;
+  min-height: 60vh;
+
+  @media (min-width: 768px) {
+    flex-direction: col; // Sätt flexbox-raden när skärmen är större än 768px
+  }
 `;
 
 const MainContent = styled.div`
-  flex: 1;
-  padding: 30px;
-  margin-left: 200px;
+  display: flex;
+  justify-content: flex-start;
+  padding: 20px;
+  margin: 20px;
+  background-color: #FFF;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex-grow: 1;
+
+  @media (min-width: 768px) {
+    width: 60%;  // För större skärmar ska detta ta upp 60% av bredden
+    margin-left: 0;  // Ta bort margin-left på desktop för att centrera
+  }
 `;
 
 const UploadContainer = styled.div`
-  background: white;
-  padding: 20px;
+ background-color: #ffffff;
+  padding: 40px;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
   margin-bottom: 20px;
 `;
 
@@ -53,42 +67,38 @@ const Button = styled.button`
   }
 `;
 
-const LinkButton = styled.a`
-  background-color: #E94E1B;
-  padding: 5px 10px;
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  margin-right: 10px;
+const ImgIcon = styled(FaImage)`
+cursor: pointer;
+color: green;
+margin-left: 10px;
 
-  &:hover {
-    background-color: #D4411B;
-  }
+&:hover {
+  color: green;
+}
+  
 `;
 
 const ProductListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 20px;
+width: 50%;
+  max-width: 600px;
+  margin-top: 40px;
+  flex-grow: 1; // Gör så att denna växer på större skärmar för att ta upp utrymme
+
+  @media (min-width: 768px) {
+    margin-left: 40px;  // Ge ett mellanrum mellan formuläret och nyhetslistan
+    width: 35%; // Nyheterna ska ta upp 35% av utrymmet på större skärmar
+  }
 `;
 
 const ProductItem = styled.div`
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 600px;
-`;
-
-const ProductName = styled.h3`
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 `;
 
 const Actions = styled.div`
@@ -101,18 +111,36 @@ const IconContainer = styled.div`
   gap: 10px;
 `;
 
-const EditIcon = styled(FaEdit)`
-  color: #4caf50;
-  cursor: pointer;
-  font-size: 1.5rem;
-`;
-
 const DeleteIcon = styled(FaTrash)`
-  color: #f44336;
-  cursor: pointer;
-  font-size: 1.5rem;
+cursor: pointer;
+color: #E94E1B;
+
+&:hover {
+  color: #D4411B;
+}
 `;
 
+
+const EditIcon = styled(FaEdit)`
+cursor: pointer;
+color: #007bff;
+margin-left: 10px;
+
+&:hover {
+  color: #0056b3;
+}
+  
+`;
+const FolderTitle = styled.span`
+  flex-grow: 1;
+  margin-left: 10px;
+  color: #333;
+`;
+const Title = styled.h2`
+  margin-bottom: 20px;
+  color: #333333;
+  font-size: 24px;
+`;
 const StoreUpload = () => {
   const [productName, setProductName] = useState('');
   const [productPrice, setProductPrice] = useState('');
@@ -185,13 +213,13 @@ const StoreUpload = () => {
         </UploadContainer>
 
         <ProductListContainer>
-          <h2>Produkter</h2>
+          <Title>Produkter</Title>
           {products.map(product => (
             <ProductItem key={product.id}>
-              <ProductName>{product.name} - {product.price} SEK</ProductName>
+              <FolderTitle>{product.name} - {product.price} SEK</FolderTitle>
               <Actions>
                 <IconContainer>
-                  <LinkButton href={product.imageUrl} target="_blank" rel="noopener noreferrer">Bild</LinkButton>
+                  <ImgIcon href={product.imageUrl} target="_blank" rel="noopener noreferrer">Bild</ImgIcon>
                   <EditIcon onClick={() => handleEdit(product)} />
                   <DeleteIcon onClick={() => handleDelete(product.id, product.imageUrl)} />
                 </IconContainer>

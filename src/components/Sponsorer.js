@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { firestore } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const FullNewsContainer = styled.div`
   display: flex;
@@ -14,24 +16,12 @@ const FullNewsContainer = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
-const FullNewsBox = styled.div`
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 600px;
-  text-align: left;
-`;
-
 const Title = styled.h1`
-  margin-top: 0;
-  margin-bottom: 40px;
   font-size: 3em;
   color: #C37A47;
   font-weight: bold;
   text-align: center;
   letter-spacing: 1.2px;
-
 `;
 
 const NewsList = styled.ul`
@@ -44,12 +34,13 @@ const NewsList = styled.ul`
 
 const NewsItem = styled.li`
   margin: 10px;
-  width: calc(33% - 20px); /* Adjust for 3 items per row */
+  width: calc(33% - 20px);
+
   @media (max-width: 768px) {
-    width: calc(50% - 20px); /* Adjust for 2 items per row on smaller screens */
+    width: calc(50% - 20px);
   }
   @media (max-width: 480px) {
-    width: calc(100% - 20px); /* Adjust for 1 item per row on very small screens */
+    width: calc(100% - 20px);
   }
 `;
 
@@ -66,20 +57,6 @@ const NewsImage = styled.img`
   }
 `;
 
-const BackButton = styled.button`
-   margin: 10px;
-  padding: 10px 20px;
-  background-color: #C37A47;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #C37A47;
-  }
-`;
-
 const StyledLink = styled.a`
   display: inline-block;
   margin-top: 20px;
@@ -93,25 +70,46 @@ const StyledLink = styled.a`
   text-align: center;
 
   &:hover {
-    background-color: #C37A47;
+    background-color: #b5693c;
   }
 `;
 
-const Sponsors = () => (
-  <FullNewsContainer>
-    <Title>Sponsorer</Title>
-    <NewsList>
-      {[...Array(32)].map((_, index) => (
-        <NewsItem key={index}>
-          <NewsImage 
-            src={`${process.env.PUBLIC_URL}/assets/sponsorer/sponsor${index + 1}.jpg`} 
-            alt={`Sponsor ${index + 1}`} 
-          />
-        </NewsItem>
-      ))}
-    </NewsList>
-    <StyledLink href="/">Tillbaka</StyledLink>
-  </FullNewsContainer>
-);
+const Sponsors = () => {
+  const [sponsors, setSponsors] = useState([]);
+
+  useEffect(() => {
+    const fetchSponsors = async () => {
+      const querySnapshot = await getDocs(collection(firestore, 'sponsors'));
+      const sponsorList = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setSponsors(sponsorList);
+    };
+
+    fetchSponsors();
+  }, []);
+
+  return (
+    <FullNewsContainer>
+      <Title>Sponsorer</Title>
+      <NewsList>
+        {sponsors.map((sponsor) => (
+          <NewsItem key={sponsor.id}>
+            {sponsor.sponsorLink ? (
+              <a href={sponsor.sponsorLink} target="_blank" rel="noopener noreferrer">
+                <NewsImage src={sponsor.imageUrl} alt="Sponsor" />
+              </a>
+            ) : (
+              <NewsImage src={sponsor.imageUrl} alt="Sponsor" />
+            )}
+          </NewsItem>
+        ))}
+      </NewsList>
+      <StyledLink href="/">Tillbaka</StyledLink>
+    </FullNewsContainer>
+  );
+};
 
 export default Sponsors;
+
