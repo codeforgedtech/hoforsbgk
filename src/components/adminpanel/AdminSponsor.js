@@ -150,6 +150,11 @@ const AdminSponsor = () => {
       alert('Ladda upp en bild och ange betalningsbelopp!');
       return;
     }
+
+    if (sponsors.some(sponsor => sponsor.paymentAmount === parseFloat(paymentAmount))) {
+      alert('Betalningsbeloppet måste vara unikt!');
+      return;
+    }
   
     try {
       const storageRef = ref(storage, `sponsors/${file.name}`);
@@ -197,6 +202,11 @@ const AdminSponsor = () => {
   const handleUpdateSponsor = async (id) => {
     if (paymentAmount.trim() === '') {
       alert('Betalningsbeloppet kan inte vara tomt!');
+      return;
+    }
+
+    if (sponsors.some(sponsor => sponsor.id !== id && sponsor.paymentAmount === parseFloat(paymentAmount))) {
+      alert('Betalningsbeloppet måste vara unikt!');
       return;
     }
 
