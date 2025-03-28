@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { firestore } from '../firebase';
-import { doc, getDocs, collection, getDoc} from 'firebase/firestore';
+import { doc, getDocs, collection, getDoc } from 'firebase/firestore';
 import SEO from './SEO';
 
 const ContentContainer = styled.div`
@@ -82,6 +82,23 @@ const Tab = styled.button`
   }
 `;
 
+const StyledLink = styled.a`
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #C37A47;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  text-align: center;
+
+  &:hover {
+    background-color: #b5693c;
+  }
+`;
+
 const Content = () => {
   const [activeTab, setActiveTab] = useState('föreningen');
   const [foreningText, setForeningText] = useState('');
@@ -97,7 +114,7 @@ const Content = () => {
       if (docSnap.exists()) {
         const fetchedForeningText = docSnap.data().föreningText;
         const fetchedStyrelseText = docSnap.data().styrelseText;
-        
+
         console.log('Hämtad föreningens text:', fetchedForeningText);
         console.log('Hämtad styrelsens text:', fetchedStyrelseText);
 
@@ -109,7 +126,7 @@ const Content = () => {
 
       // Hämtar intyg från Firestore
       const querySnapshot = await getDocs(collection(firestore, 'intyg'));
-      const intygData = querySnapshot.docs.map(doc => ({
+      const intygData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         fileUrl: doc.data().fileUrl,
       }));
@@ -117,11 +134,15 @@ const Content = () => {
     };
 
     fetchData(); // Kör båda funktionerna vid samma gång
-  }, []); // Tom array innebär att detta körs vid första renderin // Tom array innebär att detta körs vid första renderingen
+  }, []); // Tom array innebär att detta körs vid första renderingen
 
   return (
     <ContentContainer>
-      <SEO title="Föreningen" description="Information om föreningen och dess erkännanden." keywords="Föreningen, intyg, Hofors Bangolfklubb" />
+      <SEO
+        title="Föreningen"
+        description="Information om föreningen och dess erkännanden."
+        keywords="Föreningen, intyg, Hofors Bangolfklubb"
+      />
 
       <TabContainer>
         <Tab active={activeTab === 'föreningen'} onClick={() => setActiveTab('föreningen')}>
@@ -136,9 +157,24 @@ const Content = () => {
         {activeTab === 'föreningen' && (
           <>
             <Title>Föreningen</Title>
-            <Paragraph dangerouslySetInnerHTML={{ __html: foreningText || "Laddar föreningens information..." }} />
+            <Paragraph
+              dangerouslySetInnerHTML={{
+                __html: foreningText || 'Laddar föreningens information...',
+              }}
+            />
+            <StyledLink
+              href="https://hcponline.se/MemberList.aspx?tabpage=ClubDetails&HCPCLUB_ID=360"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Besök vår HCP Online-sida
+            </StyledLink>
             <Title>Styrelsen</Title>
-            <Paragraph dangerouslySetInnerHTML={{ __html: styrelseText || "Laddar styrelsens information..." }} />
+            <Paragraph
+              dangerouslySetInnerHTML={{
+                __html: styrelseText || 'Laddar styrelsens information...',
+              }}
+            />
           </>
         )}
 
