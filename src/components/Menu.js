@@ -65,7 +65,7 @@ const Logo = styled.img`
   @media (min-width: 768px) {
     position:relative;
     top: 2px;
-    right: 500px;
+    right: 300px;
     z-index: 15;
   }
 `;
@@ -192,6 +192,7 @@ const Menu = () => {
         <MenuItem to="/courses" onClick={closeMenu}>Banor/Tips</MenuItem>
         <MenuItem to="/rules" onClick={closeMenu}>Regler</MenuItem>
         <MenuItem to="/association" onClick={closeMenu}>Föreningen</MenuItem>
+        <MenuItem to="/avgift" onClick={closeMenu}>Avgifter</MenuItem>
         <MenuItem to="/sponsorer" onClick={closeMenu}>Sponsorer</MenuItem>
         <MenuItem to="/public" onClick={closeMenu}>Öppettider</MenuItem>
       </MenuItems>

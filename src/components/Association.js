@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { firestore } from '../firebase';
+import { doc, getDocs, collection, getDoc} from 'firebase/firestore';
 import SEO from './SEO';
-import Intyg from "../assets/intyg.png";
+
 const ContentContainer = styled.div`
   padding: 20px;
   margin: 20px;
@@ -17,14 +19,14 @@ const ContentContainer = styled.div`
 `;
 
 const ContentWrap = styled.div`
- background-color: #ffffff;
-padding: 40px;
-border-radius: 10px;
-width: 98%;
-max-width: 1220px; /* Bredden för desktop */
-margin: 0 auto; /* Centrera innehållet */
-text-align: left;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  width: 98%;
+  max-width: 1220px;
+  margin: 0 auto;
+  text-align: left;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
     padding: 10px;
@@ -41,7 +43,6 @@ const Title = styled.h1`
   font-weight: bold;
   text-align: center;
   letter-spacing: 1.2px;
-
 `;
 
 const Paragraph = styled.p`
@@ -51,18 +52,12 @@ const Paragraph = styled.p`
   text-align: justify;
 `;
 
-const List = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  color: #666666;
-  margin-bottom: 20px;
-  font-size: 18px;
-`;
-
-const ListItem = styled.li`
-  font-size: 18px;
-  line-height: 1.6;
-  color: #666666;
+const IntygImage = styled.img`
+  width: 50%;
+  display: block;
+  margin: 20px auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
 const TabContainer = styled.div`
@@ -89,14 +84,45 @@ const Tab = styled.button`
 
 const Content = () => {
   const [activeTab, setActiveTab] = useState('föreningen');
+  const [foreningText, setForeningText] = useState('');
+  const [styrelseText, setStyrelseText] = useState('');
+  const [intygList, setIntygList] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // Hämtar föreningens text från Firestore
+      const docRef = doc(firestore, 'föreningstext', 'content');
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const fetchedForeningText = docSnap.data().föreningText;
+        const fetchedStyrelseText = docSnap.data().styrelseText;
+        
+        console.log('Hämtad föreningens text:', fetchedForeningText);
+        console.log('Hämtad styrelsens text:', fetchedStyrelseText);
+
+        setForeningText(fetchedForeningText);
+        setStyrelseText(fetchedStyrelseText);
+      } else {
+        console.log('No such document!');
+      }
+
+      // Hämtar intyg från Firestore
+      const querySnapshot = await getDocs(collection(firestore, 'intyg'));
+      const intygData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        fileUrl: doc.data().fileUrl,
+      }));
+      setIntygList(intygData); // Sätt listan med intyg
+    };
+
+    fetchData(); // Kör båda funktionerna vid samma gång
+  }, []); // Tom array innebär att detta körs vid första renderin // Tom array innebär att detta körs vid första renderingen
 
   return (
     <ContentContainer>
-      <SEO
-        title="Föreningen"
-        description="Sommaren 2020 startade vi upp Hofors Bangolfklubb igen med en helt ny styrelse efter att Föreningen legat i dvala i några år."
-        keywords="Föreningen, banor, 2020"
-      />
+      <SEO title="Föreningen" description="Information om föreningen och dess erkännanden." keywords="Föreningen, intyg, Hofors Bangolfklubb" />
+
       <TabContainer>
         <Tab active={activeTab === 'föreningen'} onClick={() => setActiveTab('föreningen')}>
           Föreningen
@@ -105,63 +131,25 @@ const Content = () => {
           Intyg
         </Tab>
       </TabContainer>
+
       <ContentWrap>
         {activeTab === 'föreningen' && (
           <>
             <Title>Föreningen</Title>
-            <Paragraph>
-              Sommaren 2020 startade vi upp Hofors Bangolfklubb igen med en helt ny styrelse efter att Föreningen legat i dvala i några år.
-            </Paragraph>
-            <Paragraph>
-              Hela vintern och våren 21 jobbade vi för att få in pengar så vi kunde renovera alla banor med ny filt och underlag. 
-              Vi bytte även ut alla utslagsplatser till större betongplattor så det är anpassade för rullstol. 16 Maj 21 öppnade 
-              vi och fick en enormt fin första säsong.
-            </Paragraph>
-            <Paragraph>
-              Vi hade PRO och LSS deltagare på inbokade tider hela säsongen. Fick in många nya medlemmar bla ungdomar. Vi hade DM och KM 
-              på vår anläggning och våra licensierade spelare spelade även inomhus SM i Eskilstuna. Vi blev uppmärksammade av media för vårt arbete.
-            </Paragraph>
-            <Paragraph>
-              Säsongen 2022 hade Bangolfförbundet lagt ett stort ungdomsläger under Kristihimmelfärdshelgen hos oss och sista helgen i juli arrangerade 
-              vi ungdoms SM.
-            </Paragraph>
-            <Paragraph>
-              Sommaren 2023 så var OTSM (oldtimers) förlagt här hos oss! Det är ett väldigt stort Svenskt mästerskap med ca 150 deltagare!
-            </Paragraph>
+            <Paragraph dangerouslySetInnerHTML={{ __html: foreningText || "Laddar föreningens information..." }} />
             <Title>Styrelsen</Title>
-            <List>
-              <ListItem>Ordförande: Marie Ihren</ListItem>
-              <ListItem>Vice ordförande: Rasmus Bergqvist</ListItem>
-              <ListItem>Kassör: Anna Magnusson</ListItem>
-              <ListItem>Sekreterare: Anders Landström</ListItem>
-              <ListItem>Ledamöter: Anna-Lena Holmstrand, Anders Bergqvist, Kenneth Elfström,Christian Modén</ListItem>
-              <ListItem>Valberedning: Benneth Leanders</ListItem>
-              <ListItem>Revisor: Tommy Leanders</ListItem>
-            </List>
-            <Title>Övriga roller</Title>
-            <List>
-              <ListItem>Tävlingsledare: Anna-Lena Holmstrand</ListItem>
-              <ListItem>Domare: Rasmus Bergqvist, Marie Ihren, Micke Lindh</ListItem>
-              <ListItem>Ungdomsansvarig: Rasmus Bergqvist, Anders Landström, Christian Modén, Anna-Lena Holmstrand</ListItem>
-              <ListItem>UK (uttagningsansvarig): Anders Landström,Benneth Leanders </ListItem>
-              <ListItem>Hemsidans Administratör och ansvarige: Christer Holm</ListItem>
-            </List>
+            <Paragraph dangerouslySetInnerHTML={{ __html: styrelseText || "Laddar styrelsens information..." }} />
           </>
         )}
+
         {activeTab === 'intyg' && (
           <>
             <Title>Intyg</Title>
-            <Paragraph>
-              Här är våra intyg och erkännanden som föreningen har fått under åren.
-            </Paragraph>
-            <List>
-              <ListItem>
-                
-<img src={Intyg} alt="intyg" width="50%"/>
-
-              </ListItem>
-             
-            </List>
+            {intygList.length > 0 ? (
+              intygList.map((intyg) => <IntygImage key={intyg.id} src={intyg.fileUrl} alt="Intyg" />)
+            ) : (
+              <Paragraph>Inga intyg hittades.</Paragraph>
+            )}
           </>
         )}
       </ContentWrap>
@@ -170,5 +158,6 @@ const Content = () => {
 };
 
 export default Content;
+
 
 

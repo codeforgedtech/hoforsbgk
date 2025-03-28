@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { firestore } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-const RulesContainer = styled.div`
+const AvgiftContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,14 +27,14 @@ const Title = styled.h1`
   }
 `;
 
-const RuleWrapper = styled.div`
+const AvgiftWrapper = styled.div`
   background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
   width: 80%;
   max-width: 1220px;
   margin: 0 auto;
-  text-align: left;
+  text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   @media (max-width: 768px) {
     padding: 15px;
@@ -46,7 +46,7 @@ const RuleWrapper = styled.div`
   }
 `;
 
-const Rule = styled.div`
+const Avgifter = styled.div`
   font-size: 18px;
   color: #666666;
   margin-bottom: 20px;
@@ -57,22 +57,22 @@ const Rule = styled.div`
   }
 `;
 
-const Rules = () => {
-  const [rules, setRules] = useState('');
+const Avgift = () => {
+  const [avgift, setAvgift] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRules = async () => {
-      const docRef = doc(firestore, 'rules', 'general');
+    const fetchedAvgift = async () => {
+      const docRef = doc(firestore, 'avgifter', 'general');
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
-        const fetchedRules = docSnap.data().rules;
+        const fetchedAvgift = docSnap.data().avgift;
 
         // Logga den hämtade datan för att kontrollera formatet
-        console.log('Hämtad data från Firestore:', fetchedRules);
+        console.log('Hämtad data från Firestore:', fetchedAvgift);
 
-        setRules(fetchedRules); // Sätt den HTML-formaterade strängen
+        setAvgift(fetchedAvgift); // Sätt den HTML-formaterade strängen
         setLoading(false);
       } else {
         console.log('No such document!');
@@ -80,26 +80,23 @@ const Rules = () => {
       }
     };
 
-    fetchRules();
+    fetchedAvgift();
   }, []);
 
   return (
-    <RulesContainer>
-      <Title>Regler</Title>
-      <RuleWrapper>
+    <AvgiftContainer>
+      <Title>Avgifter</Title>
+      <AvgiftWrapper>
         {loading ? (
           <p>Laddar...</p>
-        ) : rules ? (
-          <Rule dangerouslySetInnerHTML={{ __html: rules }} /> // Här används dangerouslSetInnerHTML för att rendera HTML
+        ) : avgift ? (
+          <Avgifter dangerouslySetInnerHTML={{ __html: avgift }} /> // Här används dangerouslSetInnerHTML för att rendera HTML
         ) : (
-          <p>Inga regler tillgängliga.</p>
+          <p>Inga avgift tillgänglig.</p>
         )}
-      </RuleWrapper>
-    </RulesContainer>
+      </AvgiftWrapper>
+    </AvgiftContainer>
   );
 };
 
-export default Rules;
-
-
-
+export default Avgift;
