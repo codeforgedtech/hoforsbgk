@@ -85,6 +85,7 @@ const Sponsors = () => {
         ...doc.data(),
       }));
 
+
       // Sortera sponsorer baserat på paymentAmount i fallande ordning
       sponsorList.sort((a, b) => a.paymentAmount - b.paymentAmount);
 
