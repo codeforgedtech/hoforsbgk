@@ -134,15 +134,13 @@ const AdminSponsor = () => {
         id: doc.id,
         ...doc.data()
       }));
-
-
-      // Sortera sponsorer baserat på betalningsbelopp (från högsta till lägsta)
-      sponsorList.sort((a, b) => b.paymentAmount - a.paymentAmount);
-
-
+  
+      // Sortera sponsorer baserat på betalningsbelopp i stigande ordning (minst först)
+      sponsorList.sort((a, b) => a.paymentAmount - b.paymentAmount);
+  
       setSponsors(sponsorList);
     };
-
+  
     fetchSponsors();
   }, []);
 
@@ -159,10 +157,11 @@ const AdminSponsor = () => {
 
     if (sponsors.some(sponsor => sponsor.paymentAmount === parseFloat(paymentAmount))) {
       alert('Betalningsbeloppet måste vara unikt!');
+      return;
+    }
 
     if (!file) {
       alert('Ladda upp en bild!');
-
       return;
     }
   
@@ -173,7 +172,6 @@ const AdminSponsor = () => {
   
       const docRef = await addDoc(collection(firestore, 'sponsors'), {
         imageUrl,
-
         sponsorLink: sponsorLink.trim() !== '' ? sponsorLink : null, // Om inget länknamn finns, sätt det till null
         paymentAmount: parseFloat(paymentAmount),  // Lägg till betalningsbelopp här
       });
@@ -182,14 +180,6 @@ const AdminSponsor = () => {
       setFile(null);
       setSponsorLink('');
       setPaymentAmount('');
-
-        sponsorLink: sponsorLink.trim() !== '' ? sponsorLink : null, // Sätter null om ingen länk anges
-      });
-  
-      setSponsors([...sponsors, { id: docRef.id, imageUrl, sponsorLink }]);
-      setFile(null);
-      setSponsorLink('');
-
       alert('Sponsor tillagd!');
     } catch (error) {
       console.error('Fel vid tillägg av sponsor:', error);
@@ -227,22 +217,11 @@ const AdminSponsor = () => {
 
     if (sponsors.some(sponsor => sponsor.id !== id && sponsor.paymentAmount === parseFloat(paymentAmount))) {
       alert('Betalningsbeloppet måste vara unikt!');
-
-  const handleEditSponsor = (id, link) => {
-    setEditingId(id);
-    setNewLink(link);
-  };
-
-  const handleUpdateSponsor = async (id) => {
-    if (newLink.trim() === '') {
-      alert('Länken kan inte vara tom!');
-
       return;
     }
 
     try {
       await updateDoc(doc(firestore, 'sponsors', id), {
-
         sponsorLink: newLink.trim() !== '' ? newLink : null, // Om länk är tom, sätt den till null
         paymentAmount: parseFloat(paymentAmount) // Uppdatera betalningsbeloppet
       });
@@ -252,11 +231,6 @@ const AdminSponsor = () => {
         sponsorLink: newLink.trim() !== '' ? newLink : null, 
         paymentAmount: parseFloat(paymentAmount) 
       } : sponsor));
-=======
-        sponsorLink: newLink
-      });
-
-      setSponsors(sponsors.map(sponsor => sponsor.id === id ? { ...sponsor, sponsorLink: newLink } : sponsor));
 
       setEditingId(null);
       alert('Sponsor uppdaterad!');
@@ -311,33 +285,9 @@ const AdminSponsor = () => {
           ))}
         </SponsorList>
 
-          <Input type="text" placeholder="Sponsorens länk" value={sponsorLink} onChange={(e) => setSponsorLink(e.target.value)} />
-          <Button onClick={handleAddSponsor}>Lägg till sponsor</Button>
-        </Form>
-
-        <SponsorList>
-  {sponsors.map((sponsor) => (
-    <SponsorItem key={sponsor.id}>
-      <img src={sponsor.imageUrl} alt="Sponsor" />
-      {sponsor.sponsorLink ? (
-        <a href={sponsor.sponsorLink} target="_blank" rel="noopener noreferrer">
-         
-        </a>
-      ) : (
-        <p>Ingen länk</p>
-      )}
-      <div>
-      <EditIcon onClick={() => handleEditSponsor(sponsor.id, sponsor.sponsorLink || '')}/>
-      <DeleteIcon onClick={() => handleDeleteSponsor(sponsor.id, sponsor.imageUrl)}/>
-      </div>
-    </SponsorItem>
-  ))}
-</SponsorList>
-
       </Content>
     </Layout>
   );
 };
 
 export default AdminSponsor;
-
