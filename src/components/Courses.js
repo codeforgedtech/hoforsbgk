@@ -189,7 +189,9 @@ const Court = () => {
         <ModalCloseButton onClick={closeModal}>&times;</ModalCloseButton>
         <img src={currentImage} alt="Golf course" style={{ width: '100%', height: 'auto' }} />
       </Modal>
-    
+
+      {/* Optional Modal for tips image */}
+      {currentTipImage && (
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
