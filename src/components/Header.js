@@ -54,10 +54,10 @@ const Title = styled.h1`
 
 const Header = () => (
   <HeaderContainer>
-    <LogoContainer>
+    <LogoContainer/>
      
-      <Title></Title>
-    </LogoContainer>
+    
+
     <Menu />
   </HeaderContainer>
 );

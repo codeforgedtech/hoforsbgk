@@ -12,33 +12,35 @@ const FullNewsContainer = styled.div`
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 98%; /* Make sure container spans the full width */
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
-@media (max-width: 768px) {
-  display: flex; /* Flexbox för centrering */
-  justify-content: center; /* Centrera horisontellt */
-  align-items: center; /* Centrera vertikalt */
-  min-height: 100vh; /* Se till att containern sträcker sig över hela skärmen */
-  margin: 0 auto; /* Centrera även horisontellt med auto-marginaler */
+  width: 98%;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0 auto;
+  }
 `;
 
 const FullNewsBox = styled.div`
-background-color: #ffffff;
-padding: 20px; /* Mindre padding för mobil */
-border-radius: 10px;
-width: 100%; /* Anpassar bredden för mobil */
-max-width: 1220px; /* Breddbegränsning för desktop */
-margin: 0 auto; /* Centrera innehållet */
-text-align: left;
-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Mindre skugga för ett mjukare utseende */
-
-@media (max-width: 768px) {
-  padding: 15px; /* Ännu mindre padding för smala skärmar */
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Mildare skugga för mobil */
-  border-radius: 8px; /* Lite rundare hörn */
-  width: 95%; /* Mindre bredd för att passa skärmen */
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 1220px;
   margin: 0 auto;
-}
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 95%;
+    margin: 0 auto;
+  }
 `;
 
 const Title = styled.h2`
@@ -49,44 +51,47 @@ const Title = styled.h2`
   font-weight: bold;
   text-align: center;
   letter-spacing: 1.2px;
-@media (max-width: 768px) {
-  
-  font-size: 2em;
-  
-}
+
+  @media (max-width: 768px) {
+    font-size: 2em;
+  }
 `;
+
 const ContentContainer = styled.div`
   display: flex;
-  flex-direction: column; /* Bilden är högst upp på mobil */
+  flex-direction: column;
   gap: 20px;
 
   @media (min-width: 768px) {
-    flex-direction: row; /* Bilden och texten bredvid varandra på desktop */
+    flex-direction: row;
     align-items: flex-start;
   }
 `;
 
 const Content = styled.div`
-color: #666666;
+  color: #666666;
   font-size: 18px;
-  flex: 1; /* Take up remaining space */
-  border-radius: 8px
+  flex: 1;
+  border-radius: 8px;
+`;
+
+const ImageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 50%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    order: -1;
+  }
 `;
 
 const Image = styled.img`
-  width: 100%; /* Full bredd på mobil */
+  width: 100%;
   height: auto;
   border-radius: 10px;
   object-fit: cover;
-
-  /* Placera bilden högst upp på mobil */
-  order: -1;
-
-  @media (min-width: 768px) {
-    width: 50%; /* Halva bredden på desktop */
-    margin-right: 20px; /* Mellanrum mellan bild och text */
-    order: 0; /* Återställ ordningen på desktop */
-  }
 `;
 
 const BackButton = styled.button`
@@ -143,24 +148,32 @@ const FullNews = () => {
   }
 
   const handleBack = () => {
-    window.location.href = '/news'; // Navigate to the /news route
+    window.location.href = '/news';
   };
 
   return (
     <FullNewsContainer>
-      <SEO title={newsItem.title} description="Senaste nyheterna från vår klubb" keywords="nyheter, klubb, senaste nyheter" />
+      <SEO
+        title={newsItem.title}
+        description="Senaste nyheterna från vår klubb"
+        keywords="nyheter, klubb, senaste nyheter"
+      />
       <FullNewsBox>
-      <Title>{newsItem.title}</Title>
+        <Title>{newsItem.title}</Title>
         <ContentContainer>
-        <Content dangerouslySetInnerHTML={{ __html: newsItem.content }} />
-          {newsItem.image1 && <Image src={newsItem.image1} alt="news" />}
-         
+          <Content dangerouslySetInnerHTML={{ __html: newsItem.content }} />
+          <ImageContainer>
+            {newsItem.image1 && <Image src={newsItem.image1} alt="news" />}
+            {newsItem.image2 && <Image src={newsItem.image2} alt="news" />}
+          </ImageContainer>
         </ContentContainer>
-       
         <BackButton onClick={handleBack}>Tillbaka</BackButton>
-        {newsItem.image2 && <Image src={newsItem.image2} alt="news" />}
         {newsItem.competitionLink && (
-          <StyledLink href={newsItem.competitionLink} target="_blank" rel="noopener noreferrer">
+          <StyledLink
+            href={newsItem.competitionLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Resultat
           </StyledLink>
         )}
@@ -170,6 +183,3 @@ const FullNews = () => {
 };
 
 export default FullNews;
-
-
-
